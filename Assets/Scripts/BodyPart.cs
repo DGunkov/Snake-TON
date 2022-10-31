@@ -1,0 +1,16 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class BodyPart : MonoBehaviour
+{
+    public GameObject Parent;
+    public Movement Movement;
+
+    private void Update()
+    {
+        Parent.transform.LookAt(Parent.transform);
+        transform.position = Vector3.Lerp(transform.position, Parent.transform.position, Time.deltaTime * Movement.Speed * 3f);
+        transform.localScale = Parent.transform.localScale;
+    }
+}
