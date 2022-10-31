@@ -6,7 +6,6 @@ using System;
 public class Movement : MonoBehaviour
 {
     public Action OnFoodEaten;
-    public Action OnEnabled;
     public float Speed = 3f;
     public float BaseSpeed;
     public float RotationSpeed = 90f;
@@ -17,9 +16,13 @@ public class Movement : MonoBehaviour
     [SerializeField] private float _maxEnergy;
     [SerializeField] private float _energyChange;
 
+    private FoodManager _foodManager;
+
     private void OnEnable()
     {
-        OnEnabled?.Invoke();
+        _foodManager = FindObjectOfType<FoodManager>();
+        _foodManager.Snakes.Add(this);
+        _foodManager.UpdateSnakes();
     }
 
     private void Start()
