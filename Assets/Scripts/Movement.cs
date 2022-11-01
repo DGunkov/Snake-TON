@@ -9,7 +9,6 @@ public class Movement : MonoBehaviour
     public float Speed = 3f;
     public float BaseSpeed;
     public float RotationSpeed = 90f;
-    public bool KeyboardInput = false;
 
     [SerializeField] private float _sprintMultyplier;
     [SerializeField] private float _energy;
@@ -32,9 +31,6 @@ public class Movement : MonoBehaviour
 
     private void Update()
     {
-#if UNITY_STANDALONE 
-        Rotate();
-#endif
         Move();
         Sprint();
     }
@@ -71,26 +67,19 @@ public class Movement : MonoBehaviour
         }
     }
 
-#if UNITY_STANDALONE
-    private void Rotate()
+    public void Rotate(float direction)
     {
-        if (KeyboardInput)
-        {
-            float direction = -Input.GetAxisRaw("Horizontal");
-            transform.rotation *= Quaternion.Euler(transform.rotation.x, transform.rotation.y, direction * RotationSpeed * Time.deltaTime);
-        }
-        else
-        {
-            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 direction = mousePosition - transform.position;
-            float angle = Vector2.SignedAngle(Vector2.down, direction);
-            Vector3 targetRotation = new Vector3(0, 0, angle);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(targetRotation), RotationSpeed * Time.deltaTime);
-        }
+        transform.rotation *= Quaternion.Euler(transform.rotation.x, transform.rotation.y, direction * RotationSpeed * Time.deltaTime);
     }
-#endif
 
-    private void Move()
+    public void Rotate(Vector2 direction)
+    {
+        float angle = Vector2.SignedAngle(Vector2.down, direction);
+        Vector3 targetRotation = new Vector3(0, 0, angle);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(targetRotation), RotationSpeed * Time.deltaTime);
+    }
+
+    public void Move()
     {
         transform.Translate(Vector3.down * Speed * Time.deltaTime);
     }

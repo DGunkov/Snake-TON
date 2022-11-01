@@ -98,6 +98,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Parent: {fileID: 0}
   Movement: {fileID: 0}
+  _partsGap: 3
 --- !u!58 &8228167313462985095
 CircleCollider2D:
   m_ObjectHideFlags: 0

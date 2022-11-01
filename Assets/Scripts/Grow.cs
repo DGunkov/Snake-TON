@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class PlayerGrow : MonoBehaviour
+public class Grow : MonoBehaviour
 {
     private Movement _movement;
+    private PlayerInput _input;
 
     [SerializeField] private float _partOffset = 0.1f;
     [SerializeField] private float _minimalSpeed = 1.2f;
-    [SerializeField] private float _minimalRotationSpeed = 60f;
+    [SerializeField] private float _minimalRotationSpeed = 150f;
     [SerializeField] private float _speedMultyplier = 0.98f;
     [SerializeField] private float _rotationSpeedMultyplier = 0.99f;
     [SerializeField] private float _sizeMultyplier = 1.005f;
@@ -20,49 +21,70 @@ public class PlayerGrow : MonoBehaviour
 
     private void OnEnable()
     {
-        _movement.OnFoodEaten += Grow;
+        _movement.OnFoodEaten += GrowUp;
     }
 
     private void OnDisable()
     {
-        _movement.OnFoodEaten -= Grow;
+        _movement.OnFoodEaten -= GrowUp;
     }
 
     private void Awake()
     {
         _parts.Add(this.gameObject);
         _movement = GetComponent<Movement>();
+        if (GetComponent<PlayerInput>() != null)
+        {
+            _input = GetComponent<PlayerInput>();
+        }
     }
 
-    private void Grow()
+    private void GrowUp()
     {
         GameObject parent = _parts[_parts.Count - 1];
         Vector3 parentPosition = parent.transform.position;
         parentPosition.z -= _partOffset;
         GameObject bodyPart = GameObject.Instantiate(_bodyPart, parentPosition, Quaternion.identity) as GameObject;
+
         BodyPart part = bodyPart.GetComponent<BodyPart>();
         Movement movement = GetComponent<Movement>();
+
         part.Movement = movement;
         part.Parent = parent;
         _parts.Add(bodyPart);
-        if (movement.BaseSpeed >= _minimalSpeed)
+
+        AdjustSpeed(movement);
+        AdjustRotationSpeed(movement);
+
+        transform.localScale *= _sizeMultyplier;
+
+        if (_input != null)
         {
-            movement.BaseSpeed *= _speedMultyplier;
+            _input.CameraZoom();
         }
-        if (movement.RotationSpeed >= _minimalRotationSpeed)
+    }
+
+    private void AdjustRotationSpeed(Movement movement)
+    {
+        if (movement.RotationSpeed > _minimalRotationSpeed)
         {
             movement.RotationSpeed *= _rotationSpeedMultyplier;
         }
-        transform.localScale *= _sizeMultyplier;
-        StartCoroutine(CameraRemote());
+        else if (movement.RotationSpeed < _minimalRotationSpeed)
+        {
+            movement.RotationSpeed = _minimalRotationSpeed;
+        }
     }
 
-    private IEnumerator CameraRemote()
+    private void AdjustSpeed(Movement movement)
     {
-        for (int i = 0; i < 5; i++)
+        if (movement.BaseSpeed > _minimalSpeed)
         {
-            Camera.main.orthographicSize += _cameraMultyplier;
-            yield return new WaitForSeconds(0.35f);
+            movement.BaseSpeed *= _speedMultyplier;
+        }
+        else if (movement.BaseSpeed < _minimalSpeed)
+        {
+            movement.BaseSpeed = _minimalSpeed;
         }
     }
 }
