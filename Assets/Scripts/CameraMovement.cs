@@ -8,11 +8,14 @@ public class CameraMovement : MonoBehaviour
 
     private void Awake()
     {
-        _snake = FindObjectOfType<Movement>().transform;
+        _snake = FindObjectOfType<PlayerInput>().transform;
     }
 
     private void Update()
     {
-        transform.position = new Vector3(_snake.position.x, _snake.position.y, transform.position.z);
+        if (_snake != null)
+        {
+            transform.position = new Vector3(_snake.position.x, _snake.position.y, transform.position.z);
+        }
     }
 }

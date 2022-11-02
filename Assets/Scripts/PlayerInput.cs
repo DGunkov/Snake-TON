@@ -1,19 +1,43 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 [RequireComponent(typeof(Movement))]
+[RequireComponent(typeof(Mass))]
 public class PlayerInput : MonoBehaviour
 {
     public bool KeyboardInput = false;
+    public event Action<int> OnSnakeAppeared;
 
     [SerializeField] private float _cameraMultyplier = 0.01f;
+    [SerializeField] private int _crystallsEntered = 100;
 
     private Movement _movement;
+    private FoodManager _foodManager;
+    private Mass _mass;
+
+    private void OnEnable()
+    {
+        _mass.OnMassFilled += CameraZoom;
+    }
+
+    private void OnDisable()
+    {
+        _mass.OnMassFilled -= CameraZoom;
+    }
+
+    private void Awake()
+    {
+        _movement = GetComponent<Movement>();
+        _mass = GetComponent<Mass>();
+        _foodManager = FindObjectOfType<FoodManager>();
+    }
 
     private void Start()
     {
-        _movement = GetComponent<Movement>();
+        _foodManager.UpdateSnakes();
+        OnSnakeAppeared?.Invoke(_crystallsEntered);
     }
 
     private void Update()

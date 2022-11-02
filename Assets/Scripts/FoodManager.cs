@@ -4,47 +4,84 @@ using UnityEngine;
 
 public class FoodManager : MonoBehaviour
 {
-    [SerializeField] private GameObject _food;
-    private float width = 8.0f;
-    private float height = 4.0f;
-    public List<Movement> Snakes;
+    public List<FoodItem> FoodTypes;
+    public int AllFoodMass;
+
+    [SerializeField] private List<PlayerInput> _players;
+    [SerializeField] private Food _food;
+    [SerializeField] private float _width = 20.0f;
+    [SerializeField] private float _height = 10.0f;
 
     private void OnEnable()
     {
-        foreach (Movement snake in Snakes)
+        foreach (PlayerInput player in _players)
         {
-            snake.OnFoodEaten += Add;
+            player.OnSnakeAppeared += SpawnAllFood;
         }
     }
 
     private void OnDisable()
     {
-        foreach (Movement snake in Snakes)
+        foreach (PlayerInput player in _players)
         {
-            snake.OnFoodEaten -= Add;
+            player.OnSnakeAppeared -= SpawnAllFood;
         }
     }
 
     public void UpdateSnakes()
     {
+        _players.Clear();
+        foreach (PlayerInput player in FindObjectsOfType<PlayerInput>())
+        {
+            _players.Add(player);
+        }
         OnEnable();
     }
 
     void Start()
     {
-        UpdateSnakes();
-        for (int i = 0; i < 7; ++i)
+
+    }
+
+    private void SpawnAllFood(int foodMass)
+    {
+        AllFoodMass += foodMass;
+        if (foodMass % 2 == 0)
         {
-            Add();
+            for (int i = 0; i < foodMass / 2; i++)
+            {
+                SpawnFood(3, FoodTypes[2]);
+                SpawnFood(2, FoodTypes[1]);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < (foodMass - 1) / 2; i++)
+            {
+                SpawnFood(3, FoodTypes[2]);
+                SpawnFood(2, FoodTypes[1]);
+            }
+            SpawnFood(2, FoodTypes[1]);
         }
     }
 
-    public void Add()
+    private void SpawnFood(int count, FoodItem type)
     {
-        if (FindObjectsOfType<FoodItem>().Length < 10)
+        for (int j = 0; j < count; j++)
         {
-            Vector3 pos = new Vector3(Random.Range(width * -1, width), Random.Range(height * -1, height), 0);
-            GameObject.Instantiate(_food, pos, Quaternion.identity);
+            SpawnFoodItem(type, GetRandomPosition());
         }
+    }
+
+    public void SpawnFoodItem(FoodItem foodType, Vector2 position)
+    {
+        _food.Item = foodType;
+        Vector3 _spawnPosition = new Vector3(position.x, position.y, 0);
+        GameObject.Instantiate(_food, _spawnPosition, Quaternion.identity);
+    }
+
+    private Vector2 GetRandomPosition()
+    {
+        return new Vector2(Random.Range(_width * -1, _width), Random.Range(_height * -1, _height));
     }
 }

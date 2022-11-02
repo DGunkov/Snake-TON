@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FoodItem : MonoBehaviour
+[CreateAssetMenu(fileName = "New food", menuName = "ScriptableObjects/Food")]
+public class FoodItem : ScriptableObject
 {
-    [SerializeField] private Sprite[] _sprites;
-
-    void Start()
-    {
-        GetComponent<SpriteRenderer>().sprite = _sprites[Random.Range(0, _sprites.Length)];
-    }
+    public Sprite Sprite;
+    public float Satiety;
 }

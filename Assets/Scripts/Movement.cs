@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+[RequireComponent(typeof(Mass))]
 public class Movement : MonoBehaviour
 {
-    public Action OnFoodEaten;
+    public event Action<float> OnFoodEaten;
+    public Action OnDeath;
     public float Speed = 3f;
     public float BaseSpeed;
     public float RotationSpeed = 90f;
@@ -15,41 +17,54 @@ public class Movement : MonoBehaviour
     [SerializeField] private float _maxEnergy;
     [SerializeField] private float _energyChange;
 
-    private FoodManager _foodManager;
-
-    private void OnEnable()
-    {
-        _foodManager = FindObjectOfType<FoodManager>();
-        _foodManager.Snakes.Add(this);
-        _foodManager.UpdateSnakes();
-    }
+    private Mass _mass;
 
     private void Start()
     {
         BaseSpeed = Speed;
+        _mass = GetComponent<Mass>();
     }
 
     private void Update()
     {
         Move();
-        Sprint();
+        if (CanSprint())
+        {
+            Sprint();
+        }
+        else Unsprint();
+    }
+
+    private bool CanSprint()
+    {
+        return (Input.GetKey(KeyCode.LeftShift) || Input.GetMouseButton(0)) && (_mass.Weight > 0 || _energy > 0);
     }
 
     private void Sprint()
     {
-        if ((Input.GetKey(KeyCode.LeftShift) || Input.GetMouseButton(0)) && _energy > 0)
-        {
-            Speed = BaseSpeed * _sprintMultyplier;
-            _energy -= _energyChange * Time.deltaTime;
-        }
-        else if (Input.GetKeyUp(KeyCode.LeftShift) || Input.GetMouseButtonUp(0))
-        {
-            Speed = BaseSpeed;
-        }
-        else if (Speed != BaseSpeed)
+        Speed = BaseSpeed * _sprintMultyplier;
+        WasteEnergy();
+    }
+
+    private void Unsprint()
+    {
+        if (SprintKeyUp() || Speed != BaseSpeed)
         {
             Speed = BaseSpeed;
         }
+        if (!(Input.GetKey(KeyCode.LeftShift) || Input.GetMouseButton(0)))
+        {
+            RecoverEnegry();
+        }
+    }
+
+    private static bool SprintKeyUp()
+    {
+        return Input.GetKeyUp(KeyCode.LeftShift) || Input.GetMouseButtonUp(0);
+    }
+
+    private void RecoverEnegry()
+    {
 
         if (_energy < _maxEnergy && !(Input.GetKey(KeyCode.LeftShift) || Input.GetMouseButton(0)))
         {
@@ -60,10 +75,16 @@ public class Movement : MonoBehaviour
         {
             _energy = _maxEnergy;
         }
+    }
+
+    private void WasteEnergy()
+    {
+        _energy -= _energyChange * Time.deltaTime;
 
         if (_energy < 0)
         {
             _energy = 0;
+            _mass.SubstractMass(_energyChange / 2 * Time.deltaTime);
         }
     }
 
@@ -88,8 +109,12 @@ public class Movement : MonoBehaviour
     {
         if (other.tag.Equals("Food"))
         {
-            OnFoodEaten?.Invoke();
+            OnFoodEaten?.Invoke(other.GetComponent<Food>().Satiety);
             Destroy(other.gameObject);
+        }
+        if (other.tag.Equals("Obstacle"))
+        {
+            OnDeath?.Invoke();
         }
     }
 }
