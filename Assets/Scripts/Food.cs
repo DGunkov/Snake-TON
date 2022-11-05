@@ -5,7 +5,7 @@ using UnityEngine;
 public class Food : MonoBehaviour
 {
     public FoodItem Item;
-    public float Satiety;
+    public float Satiety { get; private set; }
 
     private void Awake()
     {

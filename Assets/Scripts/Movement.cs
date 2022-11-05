@@ -4,9 +4,10 @@ using UnityEngine;
 using System;
 
 [RequireComponent(typeof(Mass))]
+[RequireComponent(typeof(Grow))]
 public class Movement : MonoBehaviour
 {
-    public event Action<float> OnFoodEaten;
+    public event Action<GameObject> OnFoodEaten;
     public Action OnDeath;
     public float Speed = 3f;
     public float BaseSpeed;
@@ -18,16 +19,17 @@ public class Movement : MonoBehaviour
     [SerializeField] private float _energyChange;
 
     private Mass _mass;
+    private Grow _grow;
 
     private void Start()
     {
         BaseSpeed = Speed;
         _mass = GetComponent<Mass>();
+        _grow = GetComponent<Grow>();
     }
 
     private void Update()
     {
-        Move();
         if (CanSprint())
         {
             Sprint();
@@ -84,7 +86,7 @@ public class Movement : MonoBehaviour
         if (_energy < 0)
         {
             _energy = 0;
-            _mass.SubstractMass(_energyChange / 2 * Time.deltaTime);
+            _mass.SubstractMass(Time.deltaTime / 2);
         }
     }
 
@@ -109,10 +111,10 @@ public class Movement : MonoBehaviour
     {
         if (other.tag.Equals("Food"))
         {
-            OnFoodEaten?.Invoke(other.GetComponent<Food>().Satiety);
+            OnFoodEaten?.Invoke(other.gameObject);
             Destroy(other.gameObject);
         }
-        if (other.tag.Equals("Obstacle"))
+        if (other.tag.Equals("Obstacle") || (other.tag.Equals("Snake") && !_grow.Parts.Contains(other.gameObject)))
         {
             OnDeath?.Invoke();
         }

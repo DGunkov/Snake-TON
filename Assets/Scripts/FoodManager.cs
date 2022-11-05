@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class FoodManager : MonoBehaviour
 {
-    public List<FoodItem> FoodTypes;
     public int AllFoodMass;
+    public List<FoodItem> FoodTypes;
+    public event Action<GameObject> OnFoodSpawned;
 
     [SerializeField] private List<PlayerInput> _players;
     [SerializeField] private Food _food;
@@ -77,11 +79,12 @@ public class FoodManager : MonoBehaviour
     {
         _food.Item = foodType;
         Vector3 _spawnPosition = new Vector3(position.x, position.y, 0);
-        GameObject.Instantiate(_food, _spawnPosition, Quaternion.identity);
+        GameObject food = GameObject.Instantiate(_food.gameObject, _spawnPosition, Quaternion.identity);
+        OnFoodSpawned?.Invoke(food);
     }
 
     private Vector2 GetRandomPosition()
     {
-        return new Vector2(Random.Range(_width * -1, _width), Random.Range(_height * -1, _height));
+        return new Vector2(UnityEngine.Random.Range(_width * -1, _width), UnityEngine.Random.Range(_height * -1, _height));
     }
 }

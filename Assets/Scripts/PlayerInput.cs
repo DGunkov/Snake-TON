@@ -16,6 +16,7 @@ public class PlayerInput : MonoBehaviour
     private Movement _movement;
     private FoodManager _foodManager;
     private Mass _mass;
+    private Joystick _joystick;
 
     private void OnEnable()
     {
@@ -32,6 +33,10 @@ public class PlayerInput : MonoBehaviour
         _movement = GetComponent<Movement>();
         _mass = GetComponent<Mass>();
         _foodManager = FindObjectOfType<FoodManager>();
+        _joystick = FindObjectOfType<Joystick>();
+#if UNITY_ANDROID || UNITY_IOS
+        _joystick.gameObject.SetActive(true);
+#endif
     }
 
     private void Start()
@@ -43,6 +48,7 @@ public class PlayerInput : MonoBehaviour
     private void Update()
     {
         RotationInput();
+        _movement.Move();
     }
 
     private void RotationInput()
@@ -57,6 +63,15 @@ public class PlayerInput : MonoBehaviour
         {
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 direction = mousePosition - transform.position;
+            _movement.Rotate(direction);
+        }
+        _joystick.gameObject.SetActive(false);
+#endif
+
+#if UNITY_ANDROID || UNITY_IOS
+        if (_joystick != null)
+        {
+            float direction = -_joystick.Horizontal;
             _movement.Rotate(direction);
         }
 #endif

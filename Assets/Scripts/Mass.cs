@@ -27,11 +27,11 @@ public class Mass : MonoBehaviour
         _movement = GetComponent<Movement>();
     }
 
-    private void AddMass(float satiety)
+    private void AddMass(GameObject food)
     {
         if (Weight < 0) Weight = 0;
         float remain = Weight % 2;
-        Weight += satiety;
+        Weight += food.GetComponent<Food>().Satiety;
         CheckForFill(remain, OnMassFilled);
     }
 

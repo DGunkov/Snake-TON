@@ -12,16 +12,16 @@ public class Grow : MonoBehaviour
     private Mass _mass;
     private FoodManager _foodManager;
 
+    [SerializeField] private GameObject _bodyPart;
     [SerializeField] private float _partOffset = 0.1f;
     [SerializeField] private float _minimalSpeed = 1.2f;
-    [SerializeField] private float _minimalRotationSpeed = 150f;
     [SerializeField] private float _speedMultyplier = 0.98f;
-    [SerializeField] private float _rotationSpeedMultyplier = 0.99f;
     [SerializeField] private float _sizeMultyplier = 1.005f;
-    [SerializeField] private GameObject _bodyPart;
+    [SerializeField] private float _minimalRotationSpeed = 150f;
+    [SerializeField] private float _rotationSpeedMultyplier = 0.99f;
 
+    public List<GameObject> Parts = new List<GameObject>();
     private List<GameObject> _bodyParts = new List<GameObject>();
-    private List<GameObject> _parts = new List<GameObject>();
 
     private void OnEnable()
     {
@@ -39,7 +39,7 @@ public class Grow : MonoBehaviour
 
     private void Awake()
     {
-        _parts.Add(this.gameObject);
+        Parts.Add(this.gameObject);
         _mass = GetComponent<Mass>();
         _movement = GetComponent<Movement>();
         _foodManager = FindObjectOfType<FoodManager>();
@@ -51,7 +51,7 @@ public class Grow : MonoBehaviour
 
     private void GrowUp()
     {
-        GameObject parent = _parts[_parts.Count - 1];
+        GameObject parent = Parts[Parts.Count - 1];
         Vector3 parentPosition = parent.transform.position;
         parentPosition.z -= _partOffset;
         GameObject bodyPart = GameObject.Instantiate(_bodyPart, parentPosition, Quaternion.identity) as GameObject;
@@ -62,7 +62,7 @@ public class Grow : MonoBehaviour
 
         part.Movement = movement;
         part.Parent = parent;
-        _parts.Add(bodyPart);
+        Parts.Add(bodyPart);
 
         AdjustSpeed(movement);
         AdjustRotationSpeed(movement);
@@ -98,19 +98,19 @@ public class Grow : MonoBehaviour
     {
         if (_bodyParts.Count > 0)
         {
-            GameObject part = _bodyParts[_bodyParts.Count - 1].gameObject;
-            _parts.Remove(_bodyParts[_bodyParts.Count - 1]);
-            _bodyParts.Remove(_bodyParts[_bodyParts.Count - 1]);
-            Destroy(part);
+            GameObject part = _bodyParts[_bodyParts.Count - 1];
+            Parts.Remove(part);
+            _bodyParts.Remove(part);
+            Destroy(part.gameObject);
         }
     }
 
     private void Death()
     {
-        for (int i = _parts.Count - 1; i > -1; i--)
+        for (int i = Parts.Count - 1; i >= 0; i--)
         {
-            GameObject part = _parts[i];
-            _parts.Remove(part);
+            GameObject part = Parts[i];
+            Parts.Remove(part);
             _bodyParts.Remove(part);
             Destroy(part);
             _foodManager.SpawnFoodItem(_foodManager.FoodTypes[0], new Vector2(part.transform.position.x, part.transform.position.y));
