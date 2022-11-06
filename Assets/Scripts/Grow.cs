@@ -12,6 +12,8 @@ public class Grow : MonoBehaviour
     private Mass _mass;
     private FoodManager _foodManager;
 
+    [SerializeField] private Tail _tail;
+
     [SerializeField] private GameObject _bodyPart;
     [SerializeField] private float _partOffset = 0.1f;
     [SerializeField] private float _minimalSpeed = 1.2f;
@@ -40,6 +42,8 @@ public class Grow : MonoBehaviour
     private void Awake()
     {
         Parts.Add(this.gameObject);
+        _tail = GameObject.Instantiate(_tail.gameObject, this.transform.position, this.transform.rotation).GetComponent<Tail>();
+        _tail.Parent = this.gameObject;
         _mass = GetComponent<Mass>();
         _movement = GetComponent<Movement>();
         _foodManager = FindObjectOfType<FoodManager>();
@@ -51,18 +55,21 @@ public class Grow : MonoBehaviour
 
     private void GrowUp()
     {
-        GameObject parent = Parts[Parts.Count - 1];
+        GameObject parent = Parts[Parts.Count - 2];
         Vector3 parentPosition = parent.transform.position;
-        parentPosition.z -= _partOffset;
-        GameObject bodyPart = GameObject.Instantiate(_bodyPart, parentPosition, Quaternion.identity) as GameObject;
+        parentPosition.x -= _partOffset;
+        GameObject bodyPart = GameObject.Instantiate(_bodyPart, parentPosition, parent.transform.rotation) as GameObject;
         _bodyParts.Add(bodyPart);
+        _tail.Parent = bodyPart;
 
-        BodyPart part = bodyPart.GetComponent<BodyPart>();
+        BodyPart partScript = bodyPart.GetComponent<BodyPart>();
         Movement movement = GetComponent<Movement>();
 
-        part.Movement = movement;
-        part.Parent = parent;
+        partScript.Movement = movement;
+        partScript.Parent = parent;
+        Parts.Remove(Parts[Parts.Count - 1]);
         Parts.Add(bodyPart);
+        Parts.Add(_tail.gameObject);
 
         AdjustSpeed(movement);
         AdjustRotationSpeed(movement);

@@ -43,12 +43,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c03f93b9871e4574b5b0ee9534c5f76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _foodTypes:
+  AllFoodMass: 0
+  FoodTypes:
   - {fileID: 11400000, guid: 2c70dd9ef40937243b68af210ad8f86c, type: 2}
   - {fileID: 11400000, guid: c361bc9409d5fbf4f83cc204ebf17bb8, type: 2}
   - {fileID: 11400000, guid: 7aaeeee0f7ee63146a28f41cf4745421, type: 2}
+  _players: []
   _food: {fileID: 6869340950191208278, guid: fb91e92de35ba934183588188b565848, type: 3}
   _width: 20
   _height: 10
-  Players: []
-  AllFoodMass: 0

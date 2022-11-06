@@ -14,12 +14,12 @@ public class Mass : MonoBehaviour
 
     private void OnEnable()
     {
-        _movement.OnFoodEaten += AddMass;
+        _movement.OnFoodEatenLocal += AddMass;
     }
 
     private void OnDisable()
     {
-        _movement.OnFoodEaten -= AddMass;
+        _movement.OnFoodEatenLocal -= AddMass;
     }
 
     private void Awake()

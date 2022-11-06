@@ -7,7 +7,8 @@ using System;
 [RequireComponent(typeof(Grow))]
 public class Movement : MonoBehaviour
 {
-    public event Action<GameObject> OnFoodEaten;
+    public static event Action<GameObject> OnFoodEatenGlobal;
+    public event Action<GameObject> OnFoodEatenLocal;
     public Action OnDeath;
     public float Speed = 3f;
     public float BaseSpeed;
@@ -97,21 +98,22 @@ public class Movement : MonoBehaviour
 
     public void Rotate(Vector2 direction)
     {
-        float angle = Vector2.SignedAngle(Vector2.down, direction);
+        float angle = Vector2.SignedAngle(Vector2.left, direction);
         Vector3 targetRotation = new Vector3(0, 0, angle);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(targetRotation), RotationSpeed * Time.deltaTime);
     }
 
     public void Move()
     {
-        transform.Translate(Vector3.down * Speed * Time.deltaTime);
+        transform.Translate(Vector3.left * Speed * Time.deltaTime);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag.Equals("Food"))
         {
-            OnFoodEaten?.Invoke(other.gameObject);
+            OnFoodEatenGlobal?.Invoke(other.gameObject);
+            OnFoodEatenLocal?.Invoke(other.gameObject);
             Destroy(other.gameObject);
         }
         if (other.tag.Equals("Obstacle") || (other.tag.Equals("Snake") && !_grow.Parts.Contains(other.gameObject)))

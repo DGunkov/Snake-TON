@@ -5,22 +5,22 @@ using UnityEngine;
 [RequireComponent(typeof(Movement))]
 public class NPC : MonoBehaviour
 {
-    private List<GameObject> _allFood = new List<GameObject>();
+    [SerializeField] private List<GameObject> _allFood = new List<GameObject>();
 
     private Movement _movement;
     private FoodManager _foodManager;
     private Vector2 _direction;
-    private GameObject _closestFood;
+    private GameObject _food;
 
     private void OnEnable()
     {
-        _movement.OnFoodEaten += RemoveFoodFromList;
+        Movement.OnFoodEatenGlobal += RemoveFoodFromList;
         _foodManager.OnFoodSpawned += FillList;
     }
 
     private void OnDisable()
     {
-        _movement.OnFoodEaten -= RemoveFoodFromList;
+        Movement.OnFoodEatenGlobal -= RemoveFoodFromList;
         _foodManager.OnFoodSpawned -= FillList;
     }
 
@@ -33,9 +33,9 @@ public class NPC : MonoBehaviour
     private void Update()
     {
         _movement.Move();
-        if (_closestFood != null)
+        if (_food != null)
         {
-            _direction = _closestFood.transform.position - transform.position;
+            _direction = _food.transform.position - transform.position;
             _movement.Rotate(_direction);
         }
     }
@@ -43,25 +43,21 @@ public class NPC : MonoBehaviour
     private void FillList(GameObject food)
     {
         _allFood.Add(food);
-        GetClosestFood();
+        GetRandomFood();
     }
 
-    private void GetClosestFood()
+    private void GetRandomFood()
     {
-        _closestFood = _allFood[0];
-        for (int i = 0; i < _allFood.Count - 1; i++)
-        {
-            GameObject currentFood = _allFood[i];
-            if (GetDistance(currentFood) < GetDistance(_closestFood))
-            {
-                _closestFood = currentFood;
-            }
-        }
+        _food = _allFood[Random.Range(0, _allFood.Count)];
     }
 
     private float GetDistance(GameObject to)
     {
-        return Vector3.Distance(to.transform.position, transform.position);
+        if (to != null)
+        {
+            return Vector3.Distance(to.transform.position, transform.position);
+        }
+        else return Mathf.Infinity;
     }
 
     private void RemoveFoodFromList(GameObject food)
@@ -69,7 +65,7 @@ public class NPC : MonoBehaviour
         _allFood.Remove(food.gameObject);
         if (_allFood.Count > 0)
         {
-            GetClosestFood();
+            GetRandomFood();
         }
     }
 }
