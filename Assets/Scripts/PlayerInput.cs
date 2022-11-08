@@ -65,7 +65,10 @@ public class PlayerInput : MonoBehaviour
             Vector2 direction = mousePosition - transform.position;
             _movement.Rotate(direction);
         }
-        _joystick.gameObject.SetActive(false);
+        if (_joystick != null)
+        {
+            _joystick.gameObject.SetActive(false);
+        }
 #endif
 
 #if UNITY_ANDROID || UNITY_IOS

@@ -11,6 +11,7 @@ public class Mass : MonoBehaviour
 
     private Movement _movement;
     public float Weight;
+    public float BeginningMass;
 
     private void OnEnable()
     {
@@ -27,17 +28,32 @@ public class Mass : MonoBehaviour
         _movement = GetComponent<Movement>();
     }
 
-    private void AddMass(GameObject food)
+    private void Start()
     {
-        if (Weight < 0) Weight = 0;
+        for (int i = 0; i < BeginningMass; i++)
+        {
+            AddMass(1);
+            Weight = 0;
+        }
+    }
+
+    private void AddMass(float value)
+    {
+        if (Weight < 0)
+        {
+            Weight = 0;
+        }
         float remain = Weight % 2;
-        Weight += food.GetComponent<Food>().Satiety;
+        Weight += value;
         CheckForFill(remain, OnMassFilled);
     }
 
     public void SubstractMass(float value)
     {
-        if (Weight < 0) Weight = 0;
+        if (Weight < 0)
+        {
+            Weight = 0;
+        }
         if (Weight > 0)
         {
             float remain = Weight % 2;

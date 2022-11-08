@@ -7,4 +7,5 @@ public class FoodItem : ScriptableObject
 {
     public Sprite Sprite;
     public float Satiety;
+    public Color Color;
 }

@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f95d4227de004659a711c4208d65489, type: 3}
   m_Name: OneHalf
   m_EditorClassIdentifier: 
-  Sprite: {fileID: 7207882119082248946, guid: d54355f4562f04b07a444b300178659d, type: 3}
+  Sprite: {fileID: 21300000, guid: 714e2e8b997d38545bf9698f41c72c19, type: 3}
   Satiety: 0.5
+  Color: {r: 0.9994558, g: 1, b: 0.5707547, a: 1}

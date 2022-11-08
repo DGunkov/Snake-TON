@@ -60,7 +60,9 @@ public class Grow : MonoBehaviour
         parentPosition.x -= _partOffset;
         GameObject bodyPart = GameObject.Instantiate(_bodyPart, parentPosition, parent.transform.rotation) as GameObject;
         _bodyParts.Add(bodyPart);
+        bodyPart.GetComponentInChildren<SpriteRenderer>().sortingOrder = -(_bodyParts.IndexOf(bodyPart));
         _tail.Parent = bodyPart;
+        _tail.GetComponentInChildren<SpriteRenderer>().sortingOrder = bodyPart.GetComponentInChildren<SpriteRenderer>().sortingOrder - 1;
 
         BodyPart partScript = bodyPart.GetComponent<BodyPart>();
         Movement movement = GetComponent<Movement>();
@@ -106,21 +108,33 @@ public class Grow : MonoBehaviour
         if (_bodyParts.Count > 0)
         {
             GameObject part = _bodyParts[_bodyParts.Count - 1];
-            Parts.Remove(part);
-            _bodyParts.Remove(part);
-            Destroy(part.gameObject);
+            RemoveAndDestroyPart(part);
         }
     }
 
     private void Death()
     {
-        for (int i = Parts.Count - 1; i >= 0; i--)
+        int partCount = Parts.Count;
+        for (int i = Parts.Count - 1; i >= partCount - _mass.BeginningMass - 2; i--)
         {
-            GameObject part = Parts[i];
-            Parts.Remove(part);
-            _bodyParts.Remove(part);
-            Destroy(part);
-            _foodManager.SpawnFoodItem(_foodManager.FoodTypes[0], new Vector2(part.transform.position.x, part.transform.position.y));
+            RemoveAndDestroyPart(Parts[i]);
         }
+
+        if (Parts.Count > 0)
+        {
+            for (int i = Parts.Count - 1; i >= 0; i--)
+            {
+                GameObject part = Parts[i];
+                RemoveAndDestroyPart(part);
+                _foodManager.SpawnFoodItem(_foodManager.FoodTypes[0], new Vector2(part.transform.position.x, part.transform.position.y));
+            }
+        }
+    }
+
+    private void RemoveAndDestroyPart(GameObject part)
+    {
+        Parts.Remove(part);
+        _bodyParts.Remove(part);
+        Destroy(part);
     }
 }

@@ -8,7 +8,7 @@ using System;
 public class Movement : MonoBehaviour
 {
     public static event Action<GameObject> OnFoodEatenGlobal;
-    public event Action<GameObject> OnFoodEatenLocal;
+    public event Action<float> OnFoodEatenLocal;
     public Action OnDeath;
     public float Speed = 3f;
     public float BaseSpeed;
@@ -113,7 +113,7 @@ public class Movement : MonoBehaviour
         if (other.tag.Equals("Food"))
         {
             OnFoodEatenGlobal?.Invoke(other.gameObject);
-            OnFoodEatenLocal?.Invoke(other.gameObject);
+            OnFoodEatenLocal?.Invoke(other.gameObject.GetComponent<Food>().Satiety);
             Destroy(other.gameObject);
         }
         if (other.tag.Equals("Obstacle") || (other.tag.Equals("Snake") && !_grow.Parts.Contains(other.gameObject)))
