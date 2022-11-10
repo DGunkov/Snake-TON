@@ -33,13 +33,13 @@ public class PlayerInput : MonoBehaviour
 
     private void Awake()
     {
-        if (GetComponent<PhotonView>().IsMine)
+        _view = GetComponent<PhotonView>();
+        if (_view.IsMine)
         {
             _movement = GetComponent<Movement>();
             _mass = GetComponent<Mass>();
             _foodManager = FindObjectOfType<FoodManager>();
             _joystick = FindObjectOfType<Joystick>();
-            _view = GetComponent<PhotonView>();
 #if UNITY_ANDROID || UNITY_IOS
             _joystick.gameObject.SetActive(true);
 #endif

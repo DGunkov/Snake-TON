@@ -43,11 +43,6 @@ public class FoodManager : MonoBehaviour
         OnEnable();
     }
 
-    void Start()
-    {
-
-    }
-
     private void SpawnAllFood(int foodMass)
     {
         AllFoodMass += foodMass;

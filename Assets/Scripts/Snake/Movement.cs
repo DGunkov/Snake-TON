@@ -118,7 +118,7 @@ public class Movement : MonoBehaviour
         {
             OnFoodEatenGlobal?.Invoke(other.gameObject);
             OnFoodEatenLocal?.Invoke(other.gameObject.GetComponent<Food>().Satiety);
-            Destroy(other.gameObject);
+            PhotonNetwork.Destroy(other.gameObject);
         }
         if ((other.tag.Equals("Obstacle") || other.tag.Equals("Snake") || other.tag.Equals("Player")) && !_grow.Parts.Contains(other.gameObject))
         {
