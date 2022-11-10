@@ -78,14 +78,14 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 10
   m_Sprite: {fileID: 21300000, guid: 958b4ad4d24334abfbe142143990caa3, type: 3}
-  m_Color: {r: 1, g: 0, b: 0.009047508, a: 1}
+  m_Color: {r: 0.7735849, g: 0.18428776, b: 0.1788003, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 8.47, y: 8.58}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!58 &8293209889688387167
@@ -157,6 +157,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Weight: 0
+  BeginningMass: 0
 --- !u!114 &5470776940928778578
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169,6 +170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66fb66c1f49dd044083f92fe94143a48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _tail: {fileID: 0}
   _bodyPart: {fileID: 8959563289461415879, guid: 04fc51c365d994b4faad24662ce5a8a3, type: 3}
   _partOffset: 0.1
   _minimalSpeed: 1.2
@@ -189,3 +191,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0eaefdee33115844c95901ff1a58f4e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _allFood: []
