@@ -63,7 +63,7 @@ public class PlayerInput : MonoBehaviour
 
     private void RotationInput()
     {
-#if UNITY_STANDALONE
+#if UNITY_STANDALONE || UNITY_WEBGL
         if (KeyboardInput)
         {
             float direction = -Input.GetAxisRaw("Horizontal");

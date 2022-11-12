@@ -18,6 +18,11 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     private float _nextUpdateTime;
     private List<RoomItem> _roomItems = new List<RoomItem>();
 
+    private void Start()
+    {
+        PhotonNetwork.GetCustomRoomList(PhotonNetwork.CurrentLobby, "");
+    }
+
     public void CreateRoom()
     {
         if (_createInput.text.Length > 0)
@@ -38,10 +43,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        // _lobbyPanel.SetActive(false);
-        // _roomPanel.SetActive(true);
-        // _roomName.text = "Room: " + PhotonNetwork.CurrentRoom.Name;
-        PhotonNetwork.LoadLevel("Game");
+        PhotonNetwork.LoadLevel("Room");
     }
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
@@ -89,24 +91,8 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         PhotonNetwork.GetCustomRoomList(PhotonNetwork.CurrentLobby, "");
     }
 
-    public void LeaveRoom()
-    {
-        PhotonNetwork.LeaveRoom();
-    }
-
-    public override void OnLeftRoom()
-    {
-        _roomPanel.SetActive(false);
-        _lobbyPanel.SetActive(true);
-    }
-
     public override void OnConnectedToMaster()
     {
         PhotonNetwork.JoinLobby();
-    }
-
-    public void StartGame()
-    {
-        PhotonNetwork.LoadLevel("Game");
     }
 }
