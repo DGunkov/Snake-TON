@@ -152,7 +152,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98aca4bc6798d224ba342d0cbceba9ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerPrefab: {fileID: 2046400054115384839, guid: 3a09da4ad4242524d8a60125d1a99fbe, type: 3}
+  _skins:
+  - {fileID: 2046400054115384839, guid: 3a09da4ad4242524d8a60125d1a99fbe, type: 3}
+  - {fileID: 2046400054115384839, guid: 53e68d2cc73212742a0ecff8515344b0, type: 3}
+  - {fileID: 2046400054115384839, guid: 853ca795343db3b4fb9bd8658c777b13, type: 3}
+  - {fileID: 2046400054115384839, guid: 9a17f71e115c98742998c557ca85ec2e, type: 3}
+  _playerPrefab: {fileID: 0}
   _cameraPrefab: {fileID: 6159527074080982874, guid: 0db31632a8def3d49a15c990ccd2a804, type: 3}
   _minimalX: -20
   _maximumX: 20

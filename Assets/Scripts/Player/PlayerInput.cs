@@ -8,7 +8,7 @@ using Photon.Pun;
 [RequireComponent(typeof(Mass))]
 public class PlayerInput : MonoBehaviour
 {
-    public bool KeyboardInput = false;
+    private bool _keyboardInput = false;
     public GameObject Camera;
     public event Action<int> OnSnakeAppeared;
 
@@ -40,6 +40,14 @@ public class PlayerInput : MonoBehaviour
             _mass = GetComponent<Mass>();
             _foodManager = FindObjectOfType<FoodManager>();
             _joystick = FindObjectOfType<Joystick>();
+            if (DataHolder.MouseInput)
+            {
+                _keyboardInput = !DataHolder.MouseInput;
+            }
+            else if (!DataHolder.MouseInput)
+            {
+                _keyboardInput = !DataHolder.MouseInput;
+            }
 #if UNITY_ANDROID || UNITY_IOS
             _joystick.gameObject.SetActive(true);
 #endif
@@ -64,7 +72,7 @@ public class PlayerInput : MonoBehaviour
     private void RotationInput()
     {
 #if UNITY_STANDALONE || UNITY_WEBGL
-        if (KeyboardInput)
+        if (_keyboardInput)
         {
             float direction = -Input.GetAxisRaw("Horizontal");
             _movement.Rotate(direction);

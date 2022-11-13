@@ -15,11 +15,10 @@ GameObject:
   - component: {fileID: 1060117595747556365}
   - component: {fileID: 2834767603809107953}
   - component: {fileID: 4007107471772107853}
-  - component: {fileID: 1685331859362886696}
   - component: {fileID: 823480146124264238}
   - component: {fileID: 4697306264369288730}
   m_Layer: 0
-  m_Name: PlayerSkeleton
+  m_Name: PlayerRobot
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -138,8 +137,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66fb66c1f49dd044083f92fe94143a48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tail: {fileID: 1858822072114895510, guid: 26505b005a29b9b489f55a84b4c16f5f, type: 3}
-  _bodyPart: {fileID: 8959563289461415879, guid: 0ba100f2999da984cad87d455806bf43, type: 3}
+  _tail: {fileID: 1858822072114895510, guid: 350fbf65bfddd9e4caba7b01a300221a, type: 3}
+  _bodyPart: {fileID: 8959563289461415879, guid: 8e1bbfebd6357c146a72af0c77ede44d, type: 3}
   _partOffset: 0.1
   _minimalSpeed: 1.2
   _speedMultyplier: 0.999
@@ -147,25 +146,6 @@ MonoBehaviour:
   _minimalRotationSpeed: 90
   _rotationSpeedMultyplier: 0.997
   Parts: []
---- !u!95 &1685331859362886696
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2046400054115384839}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 8ebf2be394f3f0d46a1636b7f1f46da5, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &823480146124264238
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -246,13 +226,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2335827142519256816}
-  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -0.355, y: 0.07, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.2, y: 0.07, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2046400054115384837}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2335827142519256818
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -293,7 +273,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 4588977152409221907, guid: be763f4f8c80d5f4aa3a7418d7dc076d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e7c4dee8039bd344d8efbf000b6a3cb7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
   m_FlipY: 0

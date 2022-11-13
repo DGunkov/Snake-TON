@@ -20,7 +20,8 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        PhotonNetwork.GetCustomRoomList(PhotonNetwork.CurrentLobby, "");
+        // PhotonNetwork.GetCustomRoomList(PhotonNetwork.CurrentLobby, null);
+        // _nextUpdateTime = 0f;
     }
 
     public void CreateRoom()
@@ -88,7 +89,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedLobby()
     {
-        PhotonNetwork.GetCustomRoomList(PhotonNetwork.CurrentLobby, "");
+        PhotonNetwork.GetCustomRoomList(PhotonNetwork.CurrentLobby, null);
     }
 
     public override void OnConnectedToMaster()
