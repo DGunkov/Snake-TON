@@ -50,15 +50,16 @@ public class Mass : MonoBehaviour
 
     public void SubstractMass(float value)
     {
-        if (Weight < 0)
-        {
-            Weight = 0;
-        }
         if (Weight > 0)
         {
             float remain = Weight % 2;
             Weight -= value;
             CheckForFill(remain, OnMassDeFilled);
+        }
+        if (Weight < 0)
+        {
+            Weight = 0;
+            return;
         }
     }
 

@@ -19,6 +19,9 @@ public class Movement : MonoBehaviour
     [SerializeField] private float _energy;
     [SerializeField] private float _maxEnergy;
     [SerializeField] private float _energyChange;
+    [SerializeField] private float _baseAnimationDelay = 30f;
+
+    private bool _isAnimating = false;
 
     private Mass _mass;
     private Grow _grow;
@@ -51,6 +54,44 @@ public class Movement : MonoBehaviour
     {
         Speed = BaseSpeed * _sprintMultyplier;
         WasteEnergy();
+        if (GetComponent<Animator>() != null)
+        {
+            GetComponent<Animator>().SetBool("IsSprinting", true);
+        }
+        if (!_isAnimating)
+        {
+            _isAnimating = true;
+            StartCoroutine(SprintAnimation());
+        }
+    }
+
+    private IEnumerator SprintAnimation()
+    {
+        float delay = _baseAnimationDelay / _grow.Parts.Count;
+        while (_isAnimating)
+        {
+            for (int i = 0; i <= _grow.Parts.Count - 1; i++)
+            {
+                if (i > 1)
+                {
+                    _grow.Parts[i - 1].GetComponentInChildren<SpriteRenderer>().color = new Color(0.8f, 0.8f, 0.8f);
+                    _grow.Parts[i - 2].GetComponentInChildren<SpriteRenderer>().color = new Color(0.8f, 0.8f, 0.8f);
+                }
+                _grow.Parts[i].GetComponentInChildren<SpriteRenderer>().color = new Color(1, 1, 1);
+                if (i < _grow.Parts.Count - 1)
+                {
+                    _grow.Parts[i + 1].GetComponentInChildren<SpriteRenderer>().color = new Color(1, 1, 1);
+                }
+                if (i == 0)
+                {
+                    _grow.Parts[_grow.Parts.Count - 1].GetComponentInChildren<SpriteRenderer>().color = new Color(0.8f, 0.8f, 0.8f);
+                }
+                delay = _baseAnimationDelay / _grow.Parts.Count;
+                Debug.Log(delay);
+                yield return new WaitForSeconds(delay);
+            }
+            _grow.Parts[_grow.Parts.Count - 1].GetComponentInChildren<SpriteRenderer>().color = new Color(0.8f, 0.8f, 0.8f);
+        }
     }
 
     private void Unsprint()
@@ -63,6 +104,13 @@ public class Movement : MonoBehaviour
         {
             RecoverEnegry();
         }
+
+        if (GetComponent<Animator>() != null)
+        {
+            GetComponent<Animator>().SetBool("IsSprinting", false);
+        }
+        _isAnimating = false;
+        StopCoroutine(SprintAnimation());
     }
 
     private static bool SprintKeyUp()

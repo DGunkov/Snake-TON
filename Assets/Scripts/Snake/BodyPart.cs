@@ -5,7 +5,7 @@ using UnityEngine;
 public class BodyPart : MonoBehaviour
 {
     public GameObject Parent;
-    public Movement Movement;
+    public Movement ParentMovement;
 
     [SerializeField] private float _partsGap = 2f;
 
@@ -13,7 +13,7 @@ public class BodyPart : MonoBehaviour
     private void Update()
     {
         Rotate();
-        transform.position = Vector3.Lerp(transform.position, Parent.transform.position, Time.deltaTime * Movement.Speed * _partsGap);
+        transform.position = Vector3.Lerp(transform.position, Parent.transform.position, Time.deltaTime * ParentMovement.Speed * _partsGap);
         transform.localScale = Parent.transform.localScale;
     }
 
@@ -22,6 +22,6 @@ public class BodyPart : MonoBehaviour
         Vector2 direction = Parent.transform.position - transform.position;
         float angle = Vector2.SignedAngle(Vector2.down, direction);
         Vector3 targetRotation = new Vector3(0, 0, angle);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(targetRotation), Movement.RotationSpeed * Time.deltaTime);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(targetRotation), ParentMovement.RotationSpeed * Time.deltaTime);
     }
 }

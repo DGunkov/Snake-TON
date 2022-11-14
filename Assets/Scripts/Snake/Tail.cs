@@ -23,7 +23,7 @@ public class Tail : MonoBehaviour
             }
             else if (Parent.GetComponent<BodyPart>() != null)
             {
-                _movement = Parent.GetComponent<BodyPart>().Movement;
+                _movement = Parent.GetComponent<BodyPart>().ParentMovement;
             }
         }
     }

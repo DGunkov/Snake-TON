@@ -78,7 +78,7 @@ public class Grow : MonoBehaviour
         BodyPart partScript = bodyPart.GetComponent<BodyPart>();
         Movement movement = GetComponent<Movement>();
 
-        partScript.Movement = movement;
+        partScript.ParentMovement = movement;
         partScript.Parent = parent;
         Parts.Remove(_tail);
         Parts.Add(bodyPart);

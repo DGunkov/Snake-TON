@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2046400054115384837}
-  - component: {fileID: 7197675086124383601}
+  - component: {fileID: 2781639624677440012}
   - component: {fileID: 1840309100676728407}
   - component: {fileID: 3588800198218332399}
   - component: {fileID: 1060117595747556365}
@@ -40,8 +40,8 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!58 &7197675086124383601
-CircleCollider2D:
+--- !u!68 &2781639624677440012
+EdgeCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -53,9 +53,48 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.32426453, y: 0.08126068}
-  serializedVersion: 2
-  m_Radius: 0.6043701
+  m_Offset: {x: 0, y: 0}
+  m_EdgeRadius: 0
+  m_Points:
+  - {x: -0.13800591, y: -0.38880852}
+  - {x: -0.081334725, y: -0.4087209}
+  - {x: -0.0168318, y: -0.4299978}
+  - {x: 0.035373613, y: -0.41928604}
+  - {x: 0.14811358, y: -0.40706104}
+  - {x: 0.23250604, y: -0.37949774}
+  - {x: 0.3689767, y: -0.2998579}
+  - {x: 0.4720767, y: -0.15933552}
+  - {x: 0.5274748, y: 0.038891524}
+  - {x: 0.52029717, y: 0.19396624}
+  - {x: 0.4315029, y: 0.37422}
+  - {x: 0.28903246, y: 0.50481683}
+  - {x: 0.13745567, y: 0.557105}
+  - {x: -0.09278454, y: 0.56212604}
+  - {x: -0.24201381, y: 0.5116271}
+  - {x: -0.35766122, y: 0.5115788}
+  - {x: -0.44290298, y: 0.463983}
+  - {x: -0.5273138, y: 0.39277768}
+  - {x: -0.63790756, y: 0.33529115}
+  - {x: -0.76848316, y: 0.31576622}
+  - {x: -0.8831217, y: 0.29587597}
+  - {x: -0.9956304, y: 0.27335963}
+  - {x: -1.1159165, y: 0.2542018}
+  - {x: -1.1850989, y: 0.17013732}
+  - {x: -1.1783342, y: -0.03999608}
+  - {x: -1.1210551, y: -0.088821225}
+  - {x: -1.0022261, y: -0.12176404}
+  - {x: -0.9032211, y: -0.1435542}
+  - {x: -0.8204782, y: -0.14981177}
+  - {x: -0.72273433, y: -0.16693446}
+  - {x: -0.6316172, y: -0.19119278}
+  - {x: -0.5242013, y: -0.2373142}
+  - {x: -0.3968139, y: -0.33805865}
+  - {x: -0.24735259, y: -0.3561109}
+  - {x: -0.1380059, y: -0.3888085}
+  m_AdjacentStartPoint: {x: 0, y: 0}
+  m_AdjacentEndPoint: {x: 0, y: 0}
+  m_UseAdjacentStartPoint: 0
+  m_UseAdjacentEndPoint: 0
 --- !u!50 &1840309100676728407
 Rigidbody2D:
   serializedVersion: 4
@@ -91,7 +130,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Camera: {fileID: 0}
   _cameraMultyplier: 0.01
-  _crystallsEntered: 50
+  _crystallsEntered: 300
 --- !u!114 &1060117595747556365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111,6 +150,7 @@ MonoBehaviour:
   _energy: 100
   _maxEnergy: 100
   _energyChange: 6
+  _baseAnimationDelay: 1
 --- !u!114 &2834767603809107953
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -293,7 +333,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: 4588977152409221907, guid: be763f4f8c80d5f4aa3a7418d7dc076d, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.7, g: 0.7, b: 0.7, a: 1}
   m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
