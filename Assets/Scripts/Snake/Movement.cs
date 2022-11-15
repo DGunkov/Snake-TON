@@ -87,7 +87,6 @@ public class Movement : MonoBehaviour
                     _grow.Parts[_grow.Parts.Count - 1].GetComponentInChildren<SpriteRenderer>().color = new Color(0.8f, 0.8f, 0.8f);
                 }
                 delay = _baseAnimationDelay / _grow.Parts.Count;
-                Debug.Log(delay);
                 yield return new WaitForSeconds(delay);
             }
             _grow.Parts[_grow.Parts.Count - 1].GetComponentInChildren<SpriteRenderer>().color = new Color(0.8f, 0.8f, 0.8f);

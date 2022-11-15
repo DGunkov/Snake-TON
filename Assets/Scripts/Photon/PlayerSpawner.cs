@@ -22,6 +22,7 @@ public class PlayerSpawner : MonoBehaviour
         GameObject player = PhotonNetwork.Instantiate(_playerPrefab.name, randomPosition, Quaternion.identity);
         GameObject camera = PhotonNetwork.Instantiate(_cameraPrefab.name, player.transform.position, Quaternion.identity);
         player.GetComponent<PlayerInput>().Camera = camera;
+        player.GetComponent<PlayerInput>().CrystallsEntered = DataHolder.CrystallsEntered;
         camera.GetComponent<CameraMovement>().Snake = player.transform;
     }
 }

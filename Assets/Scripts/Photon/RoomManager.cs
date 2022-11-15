@@ -9,8 +9,9 @@ using System;
 public class RoomManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] private Text _roomName;
+    [SerializeField] private InputField _crystallsInput;
+    [SerializeField] private Toggle _mouseInput;
     private int _skinIndex = 0;
-    public bool MouseInput;
     public List<GameObject> Skins;
 
     private void Awake()
@@ -31,9 +32,10 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public void StartGame()
     {
-        PhotonNetwork.LoadLevel("Game");
         DataHolder.SkinIndex = _skinIndex;
-        DataHolder.MouseInput = MouseInput;
+        DataHolder.MouseInput = _mouseInput.isOn;
+        DataHolder.CrystallsEntered = int.Parse(_crystallsInput.text);
+        PhotonNetwork.LoadLevel("Game");
     }
 
     public void Previous()
@@ -56,10 +58,5 @@ public class RoomManager : MonoBehaviourPunCallbacks
             Skins[previousIndex].SetActive(false);
             Skins[_skinIndex].SetActive(true);
         }
-    }
-
-    public void SwitchMouseInput()
-    {
-        MouseInput = !MouseInput;
     }
 }

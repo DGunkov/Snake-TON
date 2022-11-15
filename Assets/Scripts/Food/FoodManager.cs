@@ -45,6 +45,7 @@ public class FoodManager : MonoBehaviour
 
     private void SpawnAllFood(int foodMass)
     {
+        foodMass /= 2;
         AllFoodMass += foodMass;
         if (foodMass % 2 == 0)
         {

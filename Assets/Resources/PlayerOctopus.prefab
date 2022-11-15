@@ -89,9 +89,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 783e89109577e8e4a95b74d29739ab59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CrystallsEntered: 100
   Camera: {fileID: 0}
   _cameraMultyplier: 0.01
-  _crystallsEntered: 300
 --- !u!114 &1060117595747556365
 MonoBehaviour:
   m_ObjectHideFlags: 0

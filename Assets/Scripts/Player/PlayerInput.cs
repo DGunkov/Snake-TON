@@ -8,18 +8,18 @@ using Photon.Pun;
 [RequireComponent(typeof(Mass))]
 public class PlayerInput : MonoBehaviour
 {
-    private bool _keyboardInput = false;
+    public int CrystallsEntered = 100;
     public GameObject Camera;
     public event Action<int> OnSnakeAppeared;
 
     [SerializeField] private float _cameraMultyplier = 0.01f;
-    [SerializeField] private int _crystallsEntered = 100;
 
     private Mass _mass;
     private PhotonView _view;
     private Movement _movement;
     private Joystick _joystick;
     private FoodManager _foodManager;
+    private bool _keyboardInput = false;
 
     private void OnEnable()
     {
@@ -57,7 +57,7 @@ public class PlayerInput : MonoBehaviour
     private void Start()
     {
         _foodManager.UpdateSnakes();
-        OnSnakeAppeared?.Invoke(_crystallsEntered);
+        OnSnakeAppeared?.Invoke(CrystallsEntered);
     }
 
     private void Update()
