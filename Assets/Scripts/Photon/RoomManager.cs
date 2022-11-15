@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 using System;
+using UnityEngine.SceneManagement;
 
 public class RoomManager : MonoBehaviourPunCallbacks
 {
@@ -28,14 +29,15 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public override void OnLeftRoom()
     {
         PhotonNetwork.JoinLobby();
+        SceneManager.LoadScene("Lobby");
     }
 
     public void StartGame()
     {
+        PhotonNetwork.LoadLevel("Game");
         DataHolder.SkinIndex = _skinIndex;
         DataHolder.MouseInput = _mouseInput.isOn;
         DataHolder.CrystallsEntered = int.Parse(_crystallsInput.text);
-        PhotonNetwork.LoadLevel("Game");
     }
 
     public void Previous()

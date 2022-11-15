@@ -8,35 +8,40 @@ public class NPC : MonoBehaviour
     [SerializeField] private List<GameObject> _allFood = new List<GameObject>();
 
     private Movement _movement;
-    private FoodManager _foodManager;
+    // private FoodManager _foodManager;
     private Vector2 _direction;
     private GameObject _food;
 
     private void OnEnable()
     {
-        Movement.OnFoodEatenGlobal += RemoveFoodFromList;
-        _foodManager.OnFoodSpawned += FillList;
+        // Movement.OnFoodEatenGlobal += RemoveFoodFromList;
+        // _foodManager.OnFoodSpawned += FillList;
     }
 
     private void OnDisable()
     {
-        Movement.OnFoodEatenGlobal -= RemoveFoodFromList;
-        _foodManager.OnFoodSpawned -= FillList;
+        // Movement.OnFoodEatenGlobal -= RemoveFoodFromList;
+        // _foodManager.OnFoodSpawned -= FillList;
     }
 
     private void Awake()
     {
         _movement = GetComponent<Movement>();
-        _foodManager = FindObjectOfType<FoodManager>();
+        // _foodManager = FindObjectOfType<FoodManager>();
     }
 
     private void Update()
     {
+        // _allFood = DataHolder.AllFood;
         _movement.Move();
         if (_food != null)
         {
             _direction = _food.transform.position - transform.position;
             _movement.Rotate(_direction);
+        }
+        else if (_food == null)
+        {
+            _food = DataHolder.GetRandomFood();
         }
     }
 
@@ -48,7 +53,7 @@ public class NPC : MonoBehaviour
 
     private void GetRandomFood()
     {
-        _food = _allFood[Random.Range(0, _allFood.Count)];
+        _food = DataHolder.AllFood[Random.Range(0, DataHolder.AllFood.Count)];
     }
 
     private float GetDistance(GameObject to)

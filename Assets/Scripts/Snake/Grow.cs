@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Photon.Pun;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Mass))]
 [RequireComponent(typeof(Movement))]
@@ -140,10 +141,13 @@ public class Grow : MonoBehaviour
                 _foodManager.SpawnFoodItem(_foodManager.FoodOne, new Vector2(part.transform.position.x, part.transform.position.y));
             }
         }
-        PhotonNetwork.Destroy(GetComponent<PlayerInput>().Camera.gameObject);
-        PhotonNetwork.LeaveRoom();
-        PhotonNetwork.JoinLobby();
-        PhotonNetwork.LoadLevel("Lobby");
+        if (GetComponent<PlayerInput>() != null)
+        {
+            PhotonNetwork.LeaveRoom();
+            PhotonNetwork.JoinLobby();
+            PhotonNetwork.Destroy(GetComponent<PlayerInput>().Camera.gameObject);
+            SceneManager.LoadScene("Lobby");
+        }
     }
 
     private void RemoveAndDestroyPart(GameObject part)

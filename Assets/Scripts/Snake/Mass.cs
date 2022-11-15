@@ -37,7 +37,7 @@ public class Mass : MonoBehaviour
         }
     }
 
-    private void AddMass(float value)
+    public void AddMass(float value)
     {
         if (Weight < 0)
         {

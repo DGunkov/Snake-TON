@@ -78,6 +78,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             else
             {
                 RoomItem newRoom = Instantiate(_roomItem, _contentObject);
+                PhotonNetwork.InstantiateRoomObject(newRoom.name, transform.position * 0, Quaternion.identity);
                 if (newRoom != null)
                 {
                     newRoom.SetRoomInfo(room);
@@ -85,11 +86,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
                 }
             }
         }
-    }
-
-    public override void OnJoinedLobby()
-    {
-        PhotonNetwork.GetCustomRoomList(PhotonNetwork.CurrentLobby, null);
     }
 
     public override void OnConnectedToMaster()

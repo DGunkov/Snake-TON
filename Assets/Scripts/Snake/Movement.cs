@@ -8,16 +8,16 @@ using Photon.Pun;
 [RequireComponent(typeof(Grow))]
 public class Movement : MonoBehaviour
 {
-    public static event Action<GameObject> OnFoodEatenGlobal;
+    // public static event Action<GameObject> OnFoodEatenGlobal;
     public event Action<float> OnFoodEatenLocal;
     public Action OnDeath;
     public float Speed = 3f;
     public float BaseSpeed;
     public float RotationSpeed = 90f;
+    public float MaxEnergy;
+    public float Energy;
 
     [SerializeField] private float _sprintMultyplier;
-    [SerializeField] private float _energy;
-    [SerializeField] private float _maxEnergy;
     [SerializeField] private float _energyChange;
     [SerializeField] private float _baseAnimationDelay = 30f;
 
@@ -26,9 +26,16 @@ public class Movement : MonoBehaviour
     private Mass _mass;
     private Grow _grow;
 
-    private void Start()
+    private void Awake()
     {
-        if (GetComponent<PhotonView>().IsMine)
+        if (GetComponent<PhotonView>().IsMine && this.gameObject.tag.Equals("Player"))
+        {
+            BaseSpeed = Speed;
+            _mass = GetComponent<Mass>();
+            _grow = GetComponent<Grow>();
+        }
+
+        if (GetComponent<NPC>() != null)
         {
             BaseSpeed = Speed;
             _mass = GetComponent<Mass>();
@@ -47,7 +54,7 @@ public class Movement : MonoBehaviour
 
     private bool CanSprint()
     {
-        return (Input.GetKey(KeyCode.LeftShift) || Input.GetMouseButton(0)) && (_mass.Weight > 0 || _energy > 0) && GetComponent<PhotonView>().IsMine;
+        return (Input.GetKey(KeyCode.LeftShift) || Input.GetMouseButton(0)) && (_mass.Weight > 0 || Energy > 0) && GetComponent<PhotonView>().IsMine && GetComponent<NPC>() == null;
     }
 
     private void Sprint()
@@ -120,24 +127,24 @@ public class Movement : MonoBehaviour
     private void RecoverEnegry()
     {
 
-        if (_energy < _maxEnergy && !(Input.GetKey(KeyCode.LeftShift) || Input.GetMouseButton(0)))
+        if (Energy < MaxEnergy && !(Input.GetKey(KeyCode.LeftShift) || Input.GetMouseButton(0)))
         {
-            _energy += _energyChange / 2 * Time.deltaTime;
+            Energy += _energyChange / 2 * Time.deltaTime;
         }
 
-        if (_energy > _maxEnergy)
+        if (Energy > MaxEnergy)
         {
-            _energy = _maxEnergy;
+            Energy = MaxEnergy;
         }
     }
 
     private void WasteEnergy()
     {
-        _energy -= _energyChange * Time.deltaTime;
+        Energy -= _energyChange * Time.deltaTime;
 
-        if (_energy < 0)
+        if (Energy < 0)
         {
-            _energy = 0;
+            Energy = 0;
             _mass.SubstractMass(Time.deltaTime / 2);
         }
     }
@@ -163,7 +170,8 @@ public class Movement : MonoBehaviour
     {
         if (other.tag.Equals("Food"))
         {
-            OnFoodEatenGlobal?.Invoke(other.gameObject);
+            // OnFoodEatenGlobal?.Invoke(other.gameObject);
+            DataHolder.AllFood.Remove(other.gameObject);
             OnFoodEatenLocal?.Invoke(other.gameObject.GetComponent<Food>().Satiety);
             PhotonNetwork.Destroy(other.gameObject);
         }

@@ -10,7 +10,7 @@ public class FoodManager : MonoBehaviour
     public Food FoodOne;
     public Food FoodHalf;
     public Food FoodThird;
-    public event Action<GameObject> OnFoodSpawned;
+    // public event Action<GameObject> OnFoodSpawned;
 
     [SerializeField] private float _width = 20.0f;
     [SerializeField] private float _height = 10.0f;
@@ -78,7 +78,8 @@ public class FoodManager : MonoBehaviour
     {
         Vector3 _spawnPosition = new Vector3(position.x, position.y, 0);
         GameObject food = PhotonNetwork.InstantiateRoomObject(foodType.name, _spawnPosition, Quaternion.identity);
-        OnFoodSpawned?.Invoke(food);
+        // OnFoodSpawned?.Invoke(food);
+        DataHolder.AllFood.Add(food);
     }
 
     private Vector2 GetRandomPosition()
