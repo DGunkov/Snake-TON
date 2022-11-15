@@ -11,6 +11,7 @@ public class UiManager : MonoBehaviourPunCallbacks
     [SerializeField] private Slider _stamina;
     [SerializeField] private Text _speedValue;
     [SerializeField] private List<Player> _players = new List<Player>();
+    [SerializeField] private List<GameObject> _playerItems = new List<GameObject>();
     [SerializeField] GameObject _playerItem;
     [SerializeField] Transform _content;
 
@@ -20,33 +21,41 @@ public class UiManager : MonoBehaviourPunCallbacks
     {
         _player = GetComponentInParent<PlayerInput>().gameObject;
         _stamina.maxValue = _player.GetComponent<Movement>().MaxEnergy;
+        _stamina.value = _stamina.maxValue;
         GetComponent<Canvas>().worldCamera = GetComponentInParent<PlayerInput>().gameObject.GetComponentInChildren<Camera>();
         foreach (Player player in PhotonNetwork.PlayerList)
         {
-            _players.Add(player);
+            AddPlayer(player);
         }
     }
 
     private void Update()
     {
         _stamina.value = _player.GetComponent<Movement>().Energy;
-        _speedValue.text = (_player.GetComponent<Movement>().Speed * 10).ToString();
+        _speedValue.text = Mathf.RoundToInt((_player.GetComponent<Movement>().Speed * 10)).ToString();
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        _players.Add(newPlayer);
-        UpdateUI(newPlayer);
+        AddPlayer(newPlayer);
+    }
+
+    private void AddPlayer(Player player)
+    {
+        _players.Add(player);
+        GameObject playerItem = GameObject.Instantiate(_playerItem, _content);
+        playerItem.GetComponentInChildren<Text>().text = player.NickName;
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         _players.Remove(otherPlayer);
-        UpdateUI(otherPlayer);
-    }
-    private void UpdateUI(Player player)
-    {
-        GameObject playerItem = GameObject.Instantiate(_playerItem, _content);
-        playerItem.GetComponentInChildren<Text>().text = player.NickName;
+        foreach (GameObject playerItem in _playerItems)
+        {
+            if (playerItem.GetComponentInChildren<Text>().text == otherPlayer.NickName)
+            {
+                Destroy(playerItem);
+            }
+        }
     }
 }

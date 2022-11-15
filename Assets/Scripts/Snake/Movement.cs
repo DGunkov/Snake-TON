@@ -8,7 +8,6 @@ using Photon.Pun;
 [RequireComponent(typeof(Grow))]
 public class Movement : MonoBehaviour
 {
-    // public static event Action<GameObject> OnFoodEatenGlobal;
     public event Action<float> OnFoodEatenLocal;
     public Action OnDeath;
     public float Speed = 3f;
@@ -33,6 +32,7 @@ public class Movement : MonoBehaviour
             BaseSpeed = Speed;
             _mass = GetComponent<Mass>();
             _grow = GetComponent<Grow>();
+            Energy = MaxEnergy;
         }
 
         if (GetComponent<NPC>() != null)
@@ -40,6 +40,7 @@ public class Movement : MonoBehaviour
             BaseSpeed = Speed;
             _mass = GetComponent<Mass>();
             _grow = GetComponent<Grow>();
+            Energy = MaxEnergy;
         }
     }
 
@@ -170,7 +171,6 @@ public class Movement : MonoBehaviour
     {
         if (other.tag.Equals("Food"))
         {
-            // OnFoodEatenGlobal?.Invoke(other.gameObject);
             DataHolder.AllFood.Remove(other.gameObject);
             OnFoodEatenLocal?.Invoke(other.gameObject.GetComponent<Food>().Satiety);
             PhotonNetwork.Destroy(other.gameObject);

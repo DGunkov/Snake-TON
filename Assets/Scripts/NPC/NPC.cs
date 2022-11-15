@@ -8,31 +8,16 @@ public class NPC : MonoBehaviour
     [SerializeField] private List<GameObject> _allFood = new List<GameObject>();
 
     private Movement _movement;
-    // private FoodManager _foodManager;
     private Vector2 _direction;
     private GameObject _food;
-
-    private void OnEnable()
-    {
-        // Movement.OnFoodEatenGlobal += RemoveFoodFromList;
-        // _foodManager.OnFoodSpawned += FillList;
-    }
-
-    private void OnDisable()
-    {
-        // Movement.OnFoodEatenGlobal -= RemoveFoodFromList;
-        // _foodManager.OnFoodSpawned -= FillList;
-    }
 
     private void Awake()
     {
         _movement = GetComponent<Movement>();
-        // _foodManager = FindObjectOfType<FoodManager>();
     }
 
     private void Update()
     {
-        // _allFood = DataHolder.AllFood;
         _movement.Move();
         if (_food != null)
         {

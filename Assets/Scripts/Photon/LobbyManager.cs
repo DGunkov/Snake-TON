@@ -18,12 +18,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     private float _nextUpdateTime;
     private List<RoomItem> _roomItems = new List<RoomItem>();
 
-    private void Start()
-    {
-        // PhotonNetwork.GetCustomRoomList(PhotonNetwork.CurrentLobby, null);
-        // _nextUpdateTime = 0f;
-    }
-
     public void CreateRoom()
     {
         if (_createInput.text.Length > 0)
