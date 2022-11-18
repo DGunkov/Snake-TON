@@ -14,7 +14,10 @@ public class BodyPart : MonoBehaviour
     {
         Rotate();
         transform.position = Vector3.Lerp(transform.position, Parent.transform.position, Time.deltaTime * ParentMovement.Speed * _partsGap);
-        transform.localScale = Parent.transform.localScale;
+        if (transform.localScale != Parent.transform.localScale)
+        {
+            transform.localScale = Parent.transform.localScale;
+        }
     }
 
     private void Rotate()

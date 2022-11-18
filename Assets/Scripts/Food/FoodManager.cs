@@ -23,6 +23,7 @@ public class FoodManager : MonoBehaviour
         {
             player.OnSnakeAppeared += SpawnAllFood;
         }
+        Movement.OnFoodEatenGlobal += DestroyFood;
     }
 
     private void OnDisable()
@@ -31,6 +32,7 @@ public class FoodManager : MonoBehaviour
         {
             player.OnSnakeAppeared -= SpawnAllFood;
         }
+        Movement.OnFoodEatenGlobal -= DestroyFood;
     }
 
     public void UpdateSnakes()
@@ -74,10 +76,16 @@ public class FoodManager : MonoBehaviour
         }
     }
 
+    private void DestroyFood(GameObject food)
+    {
+        DataHolder.AllFood.Remove(food.gameObject);
+        Destroy(food);
+    }
+
     public void SpawnFoodItem(Food foodType, Vector2 position)
     {
         Vector3 _spawnPosition = new Vector3(position.x, position.y, 0);
-        GameObject food = PhotonNetwork.InstantiateRoomObject(foodType.name, _spawnPosition, Quaternion.identity);
+        GameObject food = Instantiate(foodType.gameObject, _spawnPosition, Quaternion.identity);
         // OnFoodSpawned?.Invoke(food);
         DataHolder.AllFood.Add(food);
     }

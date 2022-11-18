@@ -22,7 +22,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         if (_createInput.text.Length > 0)
         {
-            PhotonNetwork.CreateRoom(_createInput.text, new RoomOptions() { MaxPlayers = 10 });
+            PhotonNetwork.CreateRoom(_createInput.text, new RoomOptions() { MaxPlayers = 10, CleanupCacheOnLeave = false });
         }
     }
 

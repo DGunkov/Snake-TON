@@ -6,7 +6,7 @@ using Photon.Pun;
 
 [RequireComponent(typeof(Movement))]
 [RequireComponent(typeof(Mass))]
-public class PlayerInput : MonoBehaviour
+public class PlayerInput : MonoBehaviourPunCallbacks
 {
     public int CrystallsEntered = 100;
     public GameObject Camera;
@@ -21,13 +21,15 @@ public class PlayerInput : MonoBehaviour
     private FoodManager _foodManager;
     private bool _keyboardInput = false;
 
-    private void OnEnable()
+    public override void OnEnable()
     {
+        base.OnEnable();
         _mass.OnMassFilled += CameraZoom;
     }
 
-    private void OnDisable()
+    public override void OnDisable()
     {
+        base.OnDisable();
         _mass.OnMassFilled -= CameraZoom;
     }
 
@@ -57,7 +59,13 @@ public class PlayerInput : MonoBehaviour
     private void Start()
     {
         _foodManager.UpdateSnakes();
-        OnSnakeAppeared?.Invoke(CrystallsEntered);
+        base.photonView.RPC("RPC_SpawnFood", RpcTarget.AllBuffered, CrystallsEntered);
+    }
+
+    [PunRPC]
+    private void RPC_SpawnFood(int foodMass)
+    {
+        OnSnakeAppeared?.Invoke(foodMass);
     }
 
     private void Update()

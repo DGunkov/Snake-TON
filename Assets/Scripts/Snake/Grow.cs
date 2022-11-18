@@ -88,7 +88,16 @@ public class Grow : MonoBehaviour
         AdjustSpeed(movement);
         AdjustRotationSpeed(movement);
 
-        transform.localScale *= _sizeMultyplier;
+        StartCoroutine(AdjustSize());
+    }
+
+    private IEnumerator AdjustSize()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            transform.localScale *= 1 + ((_sizeMultyplier - 1) / 5);
+            yield return new WaitForSeconds(0.35f);
+        }
     }
 
     private void AdjustRotationSpeed(Movement movement)

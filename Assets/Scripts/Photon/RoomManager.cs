@@ -34,7 +34,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public void StartGame()
     {
-        PhotonNetwork.LoadLevel("Game");
+        SceneManager.LoadScene("Game");
         DataHolder.SkinIndex = _skinIndex;
         DataHolder.MouseInput = _mouseInput.isOn;
         DataHolder.CrystallsEntered = int.Parse(_crystallsInput.text);

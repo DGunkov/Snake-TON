@@ -9,6 +9,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 {
     [SerializeField] private InputField _nickName;
     [SerializeField] private Text _connectButtonText;
+
     public void ConnectUserToServer()
     {
         if (_nickName.text.Length > 0)

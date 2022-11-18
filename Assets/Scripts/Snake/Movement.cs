@@ -6,9 +6,10 @@ using Photon.Pun;
 
 [RequireComponent(typeof(Mass))]
 [RequireComponent(typeof(Grow))]
-public class Movement : MonoBehaviour
+public class Movement : MonoBehaviourPunCallbacks
 {
     public event Action<float> OnFoodEatenLocal;
+    public static event Action<GameObject> OnFoodEatenGlobal;
     public Action OnDeath;
     public float Speed = 3f;
     public float BaseSpeed;
@@ -21,6 +22,7 @@ public class Movement : MonoBehaviour
     [SerializeField] private float _baseAnimationDelay = 30f;
 
     private bool _isAnimating = false;
+    private GameObject _lastFoodEaten;
 
     private Mass _mass;
     private Grow _grow;
@@ -171,13 +173,19 @@ public class Movement : MonoBehaviour
     {
         if (other.tag.Equals("Food"))
         {
-            DataHolder.AllFood.Remove(other.gameObject);
             OnFoodEatenLocal?.Invoke(other.gameObject.GetComponent<Food>().Satiety);
-            PhotonNetwork.Destroy(other.gameObject);
+            _lastFoodEaten = other.gameObject;
+            base.photonView.RPC("RPC_DestroyFood", RpcTarget.AllBuffered);
         }
         if ((other.tag.Equals("Obstacle") || other.tag.Equals("Snake") || other.tag.Equals("Player")) && !_grow.Parts.Contains(other.gameObject))
         {
             OnDeath?.Invoke();
         }
+    }
+
+    [PunRPC]
+    private void RPC_DestroyFood()
+    {
+        OnFoodEatenGlobal?.Invoke(_lastFoodEaten);
     }
 }
