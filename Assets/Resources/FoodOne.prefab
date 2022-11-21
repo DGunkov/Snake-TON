@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8617027364699655432}
   - component: {fileID: 3997702342193537316}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: FoodGFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 1770674004186995694}
   - component: {fileID: 4719826599406903386}
   - component: {fileID: -5474212579363023372}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: FoodOne
   m_TagString: Food
   m_Icon: {fileID: 0}

@@ -166,7 +166,7 @@ public class Movement : MonoBehaviourPunCallbacks
 
     public void Move()
     {
-        transform.Translate(Vector3.left * Speed * Time.deltaTime);
+        transform.Translate(Vector3.left * Speed * Time.deltaTime, Space.Self);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -175,7 +175,7 @@ public class Movement : MonoBehaviourPunCallbacks
         {
             OnFoodEatenLocal?.Invoke(other.gameObject.GetComponent<Food>().Satiety);
             _lastFoodEaten = other.gameObject;
-            base.photonView.RPC("RPC_DestroyFood", RpcTarget.AllBuffered);
+            base.photonView.RPC("RPC_FoodEaten", RpcTarget.AllBuffered);
         }
         if ((other.tag.Equals("Obstacle") || other.tag.Equals("Snake") || other.tag.Equals("Player")) && !_grow.Parts.Contains(other.gameObject))
         {
@@ -184,7 +184,7 @@ public class Movement : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    private void RPC_DestroyFood()
+    private void RPC_FoodEaten()
     {
         OnFoodEatenGlobal?.Invoke(_lastFoodEaten);
     }

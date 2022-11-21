@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8828004962425059276}
   - component: {fileID: 2563071918957137016}
   - component: {fileID: 6058206000541251874}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: FoodHalf
   m_TagString: Food
   m_Icon: {fileID: 0}
@@ -107,6 +107,7 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 6058206000541251874}
+  - {fileID: 0}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -136,7 +137,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1550427557798666538}
   - component: {fileID: 6155114492077264134}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: FoodGFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}

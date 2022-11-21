@@ -6,6 +6,7 @@ public static class DataHolder
     public static int SkinIndex;
     public static bool MouseInput;
     public static int CrystallsEntered;
+    public static float RenderDistance = 20f;
     public static List<GameObject> AllFood = new List<GameObject>();
 
     public static GameObject GetRandomFood()

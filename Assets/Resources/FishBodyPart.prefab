@@ -91,10 +91,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8959563289461415881}
-  - component: {fileID: 4389634013834443061}
+  - component: {fileID: 3876459589685605932}
   - component: {fileID: 8959563289461415882}
   - component: {fileID: 1573324067718795601}
-  - component: {fileID: -4529223611882099925}
+  - component: {fileID: 6357849969024978805}
   m_Layer: 0
   m_Name: FishBodyPart
   m_TagString: Snake
@@ -117,8 +117,8 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &4389634013834443061
-BoxCollider2D:
+--- !u!58 &3876459589685605932
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -130,19 +130,9 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.08533469}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.90625, y: 2.15625}
-    newSize: {x: 2.98, y: 2.8}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
+  m_Offset: {x: 0, y: 0.08103916}
   serializedVersion: 2
-  m_Size: {x: 0.42, y: 0.34158427}
-  m_EdgeRadius: 0
+  m_Radius: 0.41896084
 --- !u!114 &8959563289461415882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,7 +147,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Parent: {fileID: 0}
   ParentMovement: {fileID: 0}
-  _partsGap: 2
+  PartGap: 5
 --- !u!114 &1573324067718795601
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,11 +167,11 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
-  - {fileID: -4529223611882099925}
+  - {fileID: 6357849969024978805}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &-4529223611882099925
+--- !u!114 &6357849969024978805
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -195,9 +185,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PositionModel:
     SynchronizeEnabled: 1
-    TeleportEnabled: 1
-    TeleportIfDistanceGreaterThan: 3
-    InterpolateOption: 2
+    TeleportEnabled: 0
+    TeleportIfDistanceGreaterThan: 1000
+    InterpolateOption: 4
     InterpolateMoveTowardsSpeed: 1
     InterpolateLerpSpeed: 1
     ExtrapolateOption: 0

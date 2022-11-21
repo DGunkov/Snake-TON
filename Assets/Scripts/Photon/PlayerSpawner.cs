@@ -27,6 +27,8 @@ public class PlayerSpawner : MonoBehaviour
         player.GetComponent<PlayerInput>().Camera = camera;
         player.GetComponent<PlayerInput>().CrystallsEntered = DataHolder.CrystallsEntered;
         camera.GetComponent<CameraMovement>().Snake = player.transform;
+        PhotonNetwork.SendRate = 60;
+        PhotonNetwork.SerializationRate = 30;
     }
 
     private void SpawnNPC()

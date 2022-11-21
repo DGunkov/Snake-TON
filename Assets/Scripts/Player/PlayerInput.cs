@@ -116,6 +116,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         for (int i = 0; i < 5; i++)
         {
             Camera.GetComponent<Camera>().orthographicSize += _cameraMultyplier;
+            DataHolder.RenderDistance += 0.02f;
             yield return new WaitForSeconds(0.35f);
         }
     }

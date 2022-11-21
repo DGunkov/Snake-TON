@@ -49,20 +49,13 @@ public class Grow : MonoBehaviour
 
     private void Awake()
     {
-        if (GetComponent<PhotonView>().IsMine)
-        {
-            Parts.Add(this.gameObject);
-            _tail = PhotonNetwork.Instantiate(_tail.name, this.transform.position, this.transform.rotation);
-            _tail.GetComponent<Tail>().Parent = Parts[Parts.Count - 1];
-            Parts.Add(_tail);
-            _mass = GetComponent<Mass>();
-            _movement = GetComponent<Movement>();
-            _foodManager = FindObjectOfType<FoodManager>();
-            if (GetComponent<PlayerInput>() != null)
-            {
-                _input = GetComponent<PlayerInput>();
-            }
-        }
+        Parts.Add(this.gameObject);
+        _tail = PhotonNetwork.Instantiate(_tail.name, this.transform.position, this.transform.rotation);
+        _tail.GetComponent<Tail>().Parent = Parts[Parts.Count - 1];
+        Parts.Add(_tail);
+        _mass = GetComponent<Mass>();
+        _foodManager = FindObjectOfType<FoodManager>();
+        _movement = GetComponent<Movement>();
     }
 
     private void GrowUp()
@@ -70,7 +63,7 @@ public class Grow : MonoBehaviour
         GameObject parent = Parts[Parts.Count - 2];
         Vector3 parentPosition = parent.transform.position;
         parentPosition.x -= _partOffset;
-        GameObject bodyPart = PhotonNetwork.Instantiate(_bodyPart.name, parentPosition, parent.transform.rotation) as GameObject;
+        GameObject bodyPart = PhotonNetwork.Instantiate(_bodyPart.name, parentPosition + (parentPosition - Vector3.one * 1.2f).normalized, parent.transform.rotation) as GameObject;
         _bodyParts.Add(bodyPart);
         bodyPart.GetComponentInChildren<SpriteRenderer>().sortingOrder = -(_bodyParts.IndexOf(bodyPart));
         _tail.GetComponent<Tail>().Parent = bodyPart;
@@ -81,14 +74,29 @@ public class Grow : MonoBehaviour
 
         partScript.ParentMovement = movement;
         partScript.Parent = parent;
+        // Parts.Insert(Parts.Count - 1, bodyPart);
         Parts.Remove(_tail);
         Parts.Add(bodyPart);
         Parts.Add(_tail);
 
         AdjustSpeed(movement);
         AdjustRotationSpeed(movement);
-
         StartCoroutine(AdjustSize());
+
+        if (_bodyParts.Count % 10 == 0)
+        {
+            _bodyParts.ForEach(delegate (GameObject part)
+            {
+                part.GetComponent<BodyPart>().PartGap += 0.5f;
+            });
+            Debug.Log("PartGap adjusted" + this.gameObject.name);
+        }
+
+    }
+
+    private void AdjustGap()
+    {
+
     }
 
     private IEnumerator AdjustSize()

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,17 +8,40 @@ public class BodyPart : MonoBehaviour
     public GameObject Parent;
     public Movement ParentMovement;
 
-    [SerializeField] private float _partsGap = 2f;
+    [SerializeField] public float PartGap = 5f;
 
 
     private void Update()
     {
-        Rotate();
-        transform.position = Vector3.Lerp(transform.position, Parent.transform.position, Time.deltaTime * ParentMovement.Speed * _partsGap);
+        if (Parent != null)
+        {
+            Move();
+            SetScale();
+            SetGap();
+            Rotate();
+        }
+    }
+
+    private void SetGap()
+    {
+        if (Parent.GetComponent<BodyPart>() != null && PartGap != Parent.GetComponent<BodyPart>().PartGap)
+        {
+            PartGap = Parent.GetComponent<BodyPart>().PartGap;
+        }
+    }
+
+    private void SetScale()
+    {
         if (transform.localScale != Parent.transform.localScale)
         {
             transform.localScale = Parent.transform.localScale;
         }
+    }
+
+    private void Move()
+    {
+        float distance = ((Vector2)transform.position - (Vector2)Parent.transform.position).magnitude;
+        transform.position = Vector2.Lerp(transform.position, Parent.transform.position, distance / PartGap);
     }
 
     private void Rotate()

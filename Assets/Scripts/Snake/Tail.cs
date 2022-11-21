@@ -16,7 +16,14 @@ public class Tail : MonoBehaviour
     {
         if (GetComponent<PhotonView>().IsMine)
         {
-            _grow = Parent.GetComponent<Grow>();
+            foreach (PlayerInput player in FindObjectsOfType<PlayerInput>())
+            {
+                if (player.GetComponent<PhotonView>().IsMine)
+                {
+                    _grow = player.GetComponent<Grow>();
+                }
+            }
+
             if (Parent.GetComponent<Movement>() != null)
             {
                 _movement = Parent.GetComponent<Movement>();
@@ -31,8 +38,11 @@ public class Tail : MonoBehaviour
     private void Update()
     {
         Rotate();
-        transform.position = Vector3.Lerp(transform.position, Parent.transform.position, Time.deltaTime * _movement.Speed * _partsGap);
-        transform.localScale = Parent.transform.localScale;
+        if (Parent != null)
+        {
+            transform.position = Vector3.Lerp(transform.position, Parent.transform.position, Time.deltaTime * _movement.Speed * _partsGap);
+            transform.localScale = Parent.transform.localScale;
+        }
     }
 
     private void Rotate()
@@ -47,6 +57,7 @@ public class Tail : MonoBehaviour
         else
         {
             Parent = _grow.Parts[_grow.Parts.Count - 2];
+            Rotate();
         }
     }
 }
