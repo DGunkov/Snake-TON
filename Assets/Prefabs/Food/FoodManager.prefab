@@ -48,8 +48,8 @@ MonoBehaviour:
   FoodOne: {fileID: 8901257946433716871, guid: b65d7802109da8047a34618d4e7b3bda, type: 3}
   FoodHalf: {fileID: 1843788561134956197, guid: e52b980c59733e04ab30bf87ee389a65, type: 3}
   FoodThird: {fileID: 3737377639246067599, guid: 738d041595c6bd84b80bce88a618c116, type: 3}
-  _width: 20
-  _height: 10
+  _width: 100
+  _height: 100
   _players: []
 --- !u!114 &8756202710725856204
 MonoBehaviour:
