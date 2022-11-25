@@ -207,6 +207,7 @@ MonoBehaviour:
   _tail: {fileID: 1858822072114895510, guid: 29a48fa891835cc429aae66bd6d4f6df, type: 3}
   _bodyPart: {fileID: 8959563289461415879, guid: c5687a87fe07f724a9e06d844eccdce9, type: 3}
   _partOffset: 0.1
+  _gapIncrease: 0.7
   _minimalSpeed: 1.2
   _speedMultyplier: 0.999
   _sizeMultyplier: 1.005

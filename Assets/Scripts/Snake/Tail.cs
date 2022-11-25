@@ -8,8 +8,6 @@ public class Tail : MonoBehaviour
     public GameObject Parent;
     [SerializeField] private Movement _movement;
 
-    [SerializeField] private float _partsGap = 2f;
-
     private Grow _grow;
 
     private void Start()
@@ -38,11 +36,7 @@ public class Tail : MonoBehaviour
     private void Update()
     {
         Rotate();
-        if (Parent != null)
-        {
-            transform.position = Vector3.Lerp(transform.position, Parent.transform.position, Time.deltaTime * _movement.Speed * _partsGap);
-            transform.localScale = Parent.transform.localScale;
-        }
+        Move();
     }
 
     private void Rotate()
@@ -56,8 +50,37 @@ public class Tail : MonoBehaviour
         }
         else
         {
-            Parent = _grow.Parts[_grow.Parts.Count - 2];
-            Rotate();
+            if (_grow.Parts[_grow.Parts.Count - 2] != null)
+            {
+                Parent = _grow.Parts[_grow.Parts.Count - 2];
+                Rotate();
+            }
+        }
+    }
+
+    private void Move()
+    {
+        BodyPart bodyPart = Parent.GetComponent<BodyPart>();
+        if (bodyPart != null)
+        {
+            if (Vector2.Distance(transform.position, Parent.transform.position) >= bodyPart.Gap)
+            {
+                float distance = ((Vector2)transform.position - (Vector2)Parent.transform.position).magnitude;
+                transform.position = Vector2.Lerp(transform.position, Parent.transform.position, distance / bodyPart.PartGap);
+            }
+            else if (Vector2.Distance(transform.position, Parent.transform.position) < bodyPart.Gap)
+            {
+                float distance = ((Vector2)transform.position - (Vector2)Parent.transform.position).magnitude;
+                transform.position = Vector2.Lerp(transform.position, Parent.transform.position, distance / (bodyPart.PartGap * 2));
+            }
+        }
+    }
+
+    public void SetScale()
+    {
+        if (Parent != null)
+        {
+            transform.localScale = Parent.transform.localScale;
         }
     }
 }

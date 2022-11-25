@@ -7,29 +7,27 @@ using Photon.Realtime;
 using System;
 using UnityEngine.SceneManagement;
 
-public class RoomManager : MonoBehaviourPunCallbacks
+public class Room : MonoBehaviourPunCallbacks
 {
     [SerializeField] private Text _roomName;
     [SerializeField] private InputField _crystallsInput;
     [SerializeField] private Toggle _mouseInput;
+    [SerializeField] private GameObject _lobbyPanel;
+    [SerializeField] private GameObject _roomPanel;
+    [SerializeField] private LobbyManager _lobbyManager;
     private int _skinIndex = 0;
     public List<GameObject> Skins;
 
-    private void Awake()
+    public override void OnEnable()
     {
+        base.OnEnable();
         _roomName.text = "Room: " + DataHolder.RoomName;
         Skins[_skinIndex].SetActive(true);
     }
 
     public void LeaveRoom()
     {
-        PhotonNetwork.JoinLobby();
-        SceneManager.LoadScene("Lobby");
-    }
-
-    public override void OnJoinedRoom()
-    {
-        PhotonNetwork.LoadLevel("Game");
+        _lobbyManager.SwitchToLobby();
     }
 
     public void StartGame()
@@ -37,14 +35,19 @@ public class RoomManager : MonoBehaviourPunCallbacks
         DataHolder.SkinIndex = _skinIndex;
         DataHolder.MouseInput = _mouseInput.isOn;
         DataHolder.CrystallsEntered = int.Parse(_crystallsInput.text);
-        if (PhotonNetwork.IsMasterClient)
+        if (_lobbyManager.Creating)
         {
-            PhotonNetwork.LoadLevel("Game");
+            PhotonNetwork.CreateRoom(DataHolder.RoomName);
         }
         else
         {
             PhotonNetwork.JoinRoom(DataHolder.RoomName);
         }
+    }
+
+    public override void OnJoinedRoom()
+    {
+        PhotonNetwork.LoadLevel("Game");
     }
 
     public void Previous()

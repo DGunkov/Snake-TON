@@ -229,13 +229,12 @@ MonoBehaviour:
   _skins:
   - {fileID: 2046400054115384839, guid: 53e68d2cc73212742a0ecff8515344b0, type: 3}
   - {fileID: 2046400054115384839, guid: 853ca795343db3b4fb9bd8658c777b13, type: 3}
-  _playerPrefab: {fileID: 0}
   _cameraPrefab: {fileID: 6159527074080982874, guid: 0db31632a8def3d49a15c990ccd2a804, type: 3}
   _NPCPrefab: {fileID: 6923800257085848344, guid: d5f323591b0ff73418912026ca3a64aa, type: 3}
-  _minimalX: -20
-  _maximumX: 20
-  _minimalY: -10
-  _maximumY: 10
+  _minimalX: -100
+  _maximumX: 100
+  _minimalY: -100
+  _maximumY: 100
   NPCCount: 2
 --- !u!4 &1389776153
 Transform:

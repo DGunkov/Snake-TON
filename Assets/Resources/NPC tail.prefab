@@ -130,7 +130,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Parent: {fileID: 0}
   _movement: {fileID: 0}
-  _partsGap: 8
 --- !u!114 &-3163649266308204445
 MonoBehaviour:
   m_ObjectHideFlags: 0

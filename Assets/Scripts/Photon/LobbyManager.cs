@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine.SceneManagement;
 
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
@@ -10,36 +11,65 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     [SerializeField] private InputField _joinInput;
     [SerializeField] private GameObject _lobbyPanel;
     [SerializeField] private GameObject _roomPanel;
-    [SerializeField] private Text _roomName;
+    // [SerializeField] private Text _roomName;
     [SerializeField] private RoomItem _roomItem;
     [SerializeField] private Transform _contentObject;
     [SerializeField] private float _timeBetweenUpdates = 1.5f;
+    public bool Creating = false;
 
     private float _nextUpdateTime;
     private List<RoomItem> _roomItems = new List<RoomItem>();
 
+    public void SwitchToRoom()
+    {
+        _lobbyPanel.SetActive(false);
+        _roomPanel.SetActive(true);
+    }
+
+    public void SwitchToLobby()
+    {
+        _lobbyPanel.SetActive(true);
+        _roomPanel.SetActive(false);
+    }
+
     public void CreateRoom()
     {
+        // if (_createInput.text.Length > 0)
+        // {
+        //     DataHolder.RoomName = _createInput.text;
+        //     PhotonNetwork.CreateRoom(_createInput.text, new RoomOptions() { MaxPlayers = 10, CleanupCacheOnLeave = false });
+        // }
+
         if (_createInput.text.Length > 0)
         {
-            PhotonNetwork.CreateRoom(_createInput.text, new RoomOptions() { MaxPlayers = 10, CleanupCacheOnLeave = false });
+            DataHolder.RoomName = _createInput.text;
+            Creating = true;
+            SwitchToRoom();
         }
     }
 
     public void JoinRoom()
     {
-        PhotonNetwork.JoinRoom(_joinInput.text);
+        DataHolder.RoomName = _joinInput.text;
+        // SceneManager.LoadScene("Room");
+
+        Creating = false;
+        SwitchToRoom();
     }
 
     public void JoinRoom(string roomName)
     {
-        PhotonNetwork.JoinRoom(roomName);
+        DataHolder.RoomName = roomName;
+        // SceneManager.LoadScene("Room");
+
+        Creating = false;
+        SwitchToRoom();
     }
 
-    public override void OnJoinedRoom()
-    {
-        PhotonNetwork.LoadLevel("Room");
-    }
+    // public override void OnJoinedRoom()
+    // {
+    //     // PhotonNetwork.LoadLevel("Room");
+    // }
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
@@ -72,7 +102,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             else
             {
                 RoomItem newRoom = Instantiate(_roomItem, _contentObject);
-                PhotonNetwork.InstantiateRoomObject(newRoom.name, transform.position * 0, Quaternion.identity);
                 if (newRoom != null)
                 {
                     newRoom.SetRoomInfo(room);

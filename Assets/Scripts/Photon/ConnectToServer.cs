@@ -14,6 +14,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
     {
         if (_nickName.text.Length > 0)
         {
+            Time.timeScale = 1;
             PhotonNetwork.NickName = _nickName.text;
             _connectButtonText.text = "Connecting...";
             PhotonNetwork.ConnectUsingSettings();

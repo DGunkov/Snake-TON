@@ -63,6 +63,7 @@ public class Movement : MonoBehaviourPunCallbacks
     private void Sprint()
     {
         Speed = BaseSpeed * _sprintMultyplier;
+        _grow.Parts[1].GetComponent<BodyPart>().PartGap = _grow.Parts[1].GetComponent<BodyPart>().BasePartGap / _sprintMultyplier;
         WasteEnergy();
         if (GetComponent<Animator>() != null)
         {
@@ -87,6 +88,7 @@ public class Movement : MonoBehaviourPunCallbacks
                     _grow.Parts[i - 1].GetComponentInChildren<SpriteRenderer>().color = new Color(0.8f, 0.8f, 0.8f);
                     _grow.Parts[i - 2].GetComponentInChildren<SpriteRenderer>().color = new Color(0.8f, 0.8f, 0.8f);
                 }
+                Color exColor = _grow.Parts[i].GetComponentInChildren<SpriteRenderer>().color;
                 _grow.Parts[i].GetComponentInChildren<SpriteRenderer>().color = new Color(1, 1, 1);
                 if (i < _grow.Parts.Count - 1)
                 {
@@ -101,6 +103,13 @@ public class Movement : MonoBehaviourPunCallbacks
             }
             _grow.Parts[_grow.Parts.Count - 1].GetComponentInChildren<SpriteRenderer>().color = new Color(0.8f, 0.8f, 0.8f);
         }
+        for (int i = 0; i <= _grow.Parts.Count - 1; i++)
+        {
+            if (i % 2 == 1)
+            {
+                _grow.Parts[i].GetComponentInChildren<SpriteRenderer>().color = new Color(1f, 0.5f, 0.5f);
+            }
+        }
     }
 
     private void Unsprint()
@@ -108,6 +117,7 @@ public class Movement : MonoBehaviourPunCallbacks
         if (SprintKeyUp() || Speed != BaseSpeed)
         {
             Speed = BaseSpeed;
+            _grow.Parts[1].GetComponent<BodyPart>().PartGap = _grow.Parts[1].GetComponent<BodyPart>().BasePartGap;
         }
         if (!(Input.GetKey(KeyCode.LeftShift) || Input.GetMouseButton(0)))
         {

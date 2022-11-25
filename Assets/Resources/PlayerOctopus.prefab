@@ -108,7 +108,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Speed: 5
   BaseSpeed: 0
-  RotationSpeed: 240
+  RotationSpeed: 210
   MaxEnergy: 100
   Energy: 0
   _sprintMultyplier: 1.5
@@ -143,10 +143,11 @@ MonoBehaviour:
   _tail: {fileID: 1858822072114895510, guid: 26505b005a29b9b489f55a84b4c16f5f, type: 3}
   _bodyPart: {fileID: 8959563289461415879, guid: 0ba100f2999da984cad87d455806bf43, type: 3}
   _partOffset: 0.1
-  _minimalSpeed: 1.2
+  _gapIncrease: 0.7
+  _minimalSpeed: 2
   _speedMultyplier: 0.999
   _sizeMultyplier: 1.005
-  _minimalRotationSpeed: 90
+  _minimalRotationSpeed: 30
   _rotationSpeedMultyplier: 0.997
   Parts: []
 --- !u!95 &1685331859362886696

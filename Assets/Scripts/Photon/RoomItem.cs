@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Realtime;
+using UnityEngine.SceneManagement;
 
 public class RoomItem : MonoBehaviour
 {
@@ -23,6 +24,9 @@ public class RoomItem : MonoBehaviour
 
     public void JoinRoom()
     {
-        _manager.JoinRoom(_roomName.text);
+        DataHolder.RoomName = _roomName.text;
+        // SceneManager.LoadScene("Room");
+
+        _manager.SwitchToRoom();
     }
 }
