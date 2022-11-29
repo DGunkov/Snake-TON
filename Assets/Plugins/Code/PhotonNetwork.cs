@@ -2492,7 +2492,7 @@ namespace Photon.Pun
         {
             if (CurrentRoom == null)
             {
-                Debug.LogError("Can not Instantiate before the client joined/created a room.");
+                Debug.Log("Can not Instantiate before the client joined/created a room.");
                 return null;
             }
 

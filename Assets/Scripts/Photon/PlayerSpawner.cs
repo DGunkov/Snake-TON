@@ -9,7 +9,7 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
     [SerializeField] private List<GameObject> _skins;
 
     [SerializeField] private GameObject _cameraPrefab;
-    [SerializeField] private GameObject _NPCPrefab;
+    [SerializeField] private GameObject _npcPrefab;
 
     [SerializeField] private float _minimalX;
     [SerializeField] private float _maximumX;
@@ -42,9 +42,11 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
         for (int i = 0; i < NPCCount; i++)
         {
             Vector2 randomPos = new Vector2(Random.Range(_minimalX, _maximumX), Random.Range(_minimalY, _maximumY));
-            GameObject NPC = PhotonNetwork.InstantiateRoomObject(_NPCPrefab.name, randomPos, Quaternion.identity);
+            GameObject NPC = PhotonNetwork.InstantiateRoomObject(_npcPrefab.name, randomPos, Quaternion.identity, 1);
+            Debug.Log(NPC);
             for (int j = 0; j < DataHolder.CrystallsEntered / 2 / NPCCount; j++)
             {
+                if(NPC != null)
                 NPC.GetComponent<Mass>().AddMass(1);
             }
         }

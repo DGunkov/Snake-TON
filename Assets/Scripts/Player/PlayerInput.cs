@@ -11,6 +11,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     public int CrystallsEntered = 100;
     public GameObject Camera;
     public event Action<int> OnSnakeAppeared;
+    internal bool _mainPlayer;
 
     [SerializeField] private float _cameraMultyplier = 0.01f;
 
@@ -24,13 +25,23 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     public override void OnEnable()
     {
         base.OnEnable();
-        _mass.OnMassFilled += CameraZoom;
+        if(_mass == null)
+        {
+            _mass = GetComponent<Mass>();
+        }
+        if (_view.IsMine)
+        {
+            _mass.OnMassFilled += CameraZoom;
+        }
     }
 
     public override void OnDisable()
     {
         base.OnDisable();
-        _mass.OnMassFilled -= CameraZoom;
+        if (_view.IsMine)
+        {
+            _mass.OnMassFilled -= CameraZoom;
+        }
     }
 
     private void Awake()
@@ -58,6 +69,10 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        if(_foodManager == null)
+        {
+            _foodManager = FindObjectOfType<FoodManager>();
+        }
         _foodManager.UpdateSnakes();
         base.photonView.RPC("RPC_SpawnFood", RpcTarget.AllBuffered, CrystallsEntered);
     }
@@ -108,7 +123,10 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
     public void CameraZoom()
     {
-        StartCoroutine(CameraRemote());
+        if (_view.IsMine)
+        {
+            StartCoroutine(CameraRemote());
+        }
     }
 
     private IEnumerator CameraRemote()

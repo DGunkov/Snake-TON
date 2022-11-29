@@ -117,6 +117,29 @@ public class Movement : MonoBehaviourPunCallbacks
         if (SprintKeyUp() || Speed != BaseSpeed)
         {
             Speed = BaseSpeed;
+            if(_grow == null)
+            {
+                _grow = GetComponent<Grow>();
+            }
+
+            Debug.Log(_grow.Parts[1]);
+
+            if (_grow.Parts[1].GetComponent<BodyPart>() == null)
+            {
+                Debug.Log("_grow.Parts[1].GetComponent<BodyPart>()");
+            }
+            else
+            {
+                if (_grow.Parts[1].GetComponent<BodyPart>().PartGap == null)
+                {
+                    Debug.Log("_grow.Parts[1].GetComponent<BodyPart>().PartGap");
+                }
+
+                if (_grow.Parts[1].GetComponent<BodyPart>().BasePartGap == null)
+                {
+                    Debug.Log("_grow.Parts[1].GetComponent<BodyPart>().PartGap");
+                }
+            }
             _grow.Parts[1].GetComponent<BodyPart>().PartGap = _grow.Parts[1].GetComponent<BodyPart>().BasePartGap;
         }
         if (!(Input.GetKey(KeyCode.LeftShift) || Input.GetMouseButton(0)))

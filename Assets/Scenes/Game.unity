@@ -193,6 +193,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -230,7 +231,7 @@ MonoBehaviour:
   - {fileID: 2046400054115384839, guid: 53e68d2cc73212742a0ecff8515344b0, type: 3}
   - {fileID: 2046400054115384839, guid: 853ca795343db3b4fb9bd8658c777b13, type: 3}
   _cameraPrefab: {fileID: 6159527074080982874, guid: 0db31632a8def3d49a15c990ccd2a804, type: 3}
-  _NPCPrefab: {fileID: 6923800257085848344, guid: d5f323591b0ff73418912026ca3a64aa, type: 3}
+  _npcPrefab: {fileID: 6923800257085848344, guid: d5f323591b0ff73418912026ca3a64aa, type: 3}
   _minimalX: -100
   _maximumX: 100
   _minimalY: -100
@@ -246,6 +247,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -280,6 +282,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
   m_HorizontalAxis: Horizontal
   m_VerticalAxis: Vertical
   m_SubmitButton: Submit
@@ -312,6 +315,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
