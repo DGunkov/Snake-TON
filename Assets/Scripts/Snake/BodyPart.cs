@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class BodyPart : MonoBehaviour
 {
@@ -12,6 +13,13 @@ public class BodyPart : MonoBehaviour
     public float PartGap = 5f;
     public float Gap = 0.5f;
 
+    private void Awake()
+    {
+        if (!GetComponent<PhotonView>().IsMine)
+        {
+            this.enabled = false;
+        }
+    }
     private void Update()
     {
         if (Parent != null)

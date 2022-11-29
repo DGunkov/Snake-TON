@@ -26,7 +26,7 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
         GameObject player = PhotonNetwork.Instantiate(_skins[DataHolder.SkinIndex].name, randomPosition, Quaternion.identity);
         GameObject camera = PhotonNetwork.Instantiate(_cameraPrefab.name, player.transform.position, Quaternion.identity);
 
-        SpawnNPC();
+        //SpawnNPC();
 
         player.GetComponent<PlayerInput>().Camera = camera;
         _uiCamera = player.GetComponentInChildren<Camera>().gameObject;

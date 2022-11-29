@@ -31,6 +31,10 @@ public class Tail : MonoBehaviour
                 _movement = Parent.GetComponent<BodyPart>().ParentMovement;
             }
         }
+        else
+        {
+            this.enabled = false;
+        }
     }
 
     private void Update()

@@ -65,6 +65,10 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             _joystick.gameObject.SetActive(true);
 #endif
         }
+        else
+        {
+            this.enabled = false;
+        }
     }
 
     private void Start()

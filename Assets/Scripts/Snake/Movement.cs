@@ -36,6 +36,13 @@ public class Movement : MonoBehaviourPunCallbacks
             _grow = GetComponent<Grow>();
             Energy = MaxEnergy;
         }
+        else
+        {
+            if(!GetComponent<PhotonView>().IsMine)
+            {
+                this.enabled = false;
+            }
+        }
 
         if (GetComponent<NPC>() != null)
         {
@@ -121,25 +128,6 @@ public class Movement : MonoBehaviourPunCallbacks
             {
                 _grow = GetComponent<Grow>();
             }
-
-            Debug.Log(_grow.Parts[1]);
-
-            if (_grow.Parts[1].GetComponent<BodyPart>() == null)
-            {
-                Debug.Log("_grow.Parts[1].GetComponent<BodyPart>()");
-            }
-            else
-            {
-                if (_grow.Parts[1].GetComponent<BodyPart>().PartGap == null)
-                {
-                    Debug.Log("_grow.Parts[1].GetComponent<BodyPart>().PartGap");
-                }
-
-                if (_grow.Parts[1].GetComponent<BodyPart>().BasePartGap == null)
-                {
-                    Debug.Log("_grow.Parts[1].GetComponent<BodyPart>().PartGap");
-                }
-            }
             _grow.Parts[1].GetComponent<BodyPart>().PartGap = _grow.Parts[1].GetComponent<BodyPart>().BasePartGap;
         }
         if (!(Input.GetKey(KeyCode.LeftShift) || Input.GetMouseButton(0)))
@@ -202,7 +190,7 @@ public class Movement : MonoBehaviourPunCallbacks
         transform.Translate(Vector3.left * Speed * Time.deltaTime, Space.Self);
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    /*private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag.Equals("Food"))
         {
@@ -214,11 +202,11 @@ public class Movement : MonoBehaviourPunCallbacks
         {
             OnDeath?.Invoke();
         }
-    }
+    }*/
 
     [PunRPC]
     private void RPC_FoodEaten()
     {
-        OnFoodEatenGlobal?.Invoke(_lastFoodEaten);
+        //OnFoodEatenGlobal?.Invoke(_lastFoodEaten);
     }
 }
