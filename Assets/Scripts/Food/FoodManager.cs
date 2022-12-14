@@ -10,11 +10,13 @@ public class FoodManager : MonoBehaviour
     public Food FoodOne;
     public Food FoodHalf;
     public Food FoodThird;
-    // public event Action<GameObject> OnFoodSpawned;
+    public event Action<GameObject> OnFoodSpawned;
 
     [SerializeField] private float _width = 20.0f;
     [SerializeField] private float _height = 10.0f;
     [SerializeField] private List<PlayerInput> _players;
+
+    private bool _subcribe;
 
 
     private void OnEnable()
@@ -23,11 +25,16 @@ public class FoodManager : MonoBehaviour
         {
             player.OnSnakeAppeared += SpawnAllFood;
         }
-        Movement.OnFoodEatenGlobal += DestroyFood;
+        if(!_subcribe)
+        {
+            _subcribe = true;
+            Movement.OnFoodEatenGlobal += DestroyFood;
+        }
     }
 
     private void OnDisable()
     {
+        _subcribe = false;
         foreach (PlayerInput player in _players)
         {
             player.OnSnakeAppeared -= SpawnAllFood;
@@ -86,7 +93,7 @@ public class FoodManager : MonoBehaviour
     {
         Vector3 _spawnPosition = new Vector3(position.x, position.y, 0);
         GameObject food = Instantiate(foodType.gameObject, _spawnPosition, Quaternion.identity);
-        // OnFoodSpawned?.Invoke(food);
+        OnFoodSpawned?.Invoke(food);
         DataHolder.AllFood.Add(food);
     }
 

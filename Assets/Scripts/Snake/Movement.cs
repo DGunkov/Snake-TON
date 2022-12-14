@@ -36,14 +36,6 @@ public class Movement : MonoBehaviourPunCallbacks
             _grow = GetComponent<Grow>();
             Energy = MaxEnergy;
         }
-        else
-        {
-            if(!GetComponent<PhotonView>().IsMine)
-            {
-                this.enabled = false;
-            }
-        }
-
         if (GetComponent<NPC>() != null)
         {
             BaseSpeed = Speed;
@@ -190,23 +182,24 @@ public class Movement : MonoBehaviourPunCallbacks
         transform.Translate(Vector3.left * Speed * Time.deltaTime, Space.Self);
     }
 
-    /*private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag.Equals("Food"))
         {
             OnFoodEatenLocal?.Invoke(other.gameObject.GetComponent<Food>().Satiety);
             _lastFoodEaten = other.gameObject;
-            base.photonView.RPC("RPC_FoodEaten", RpcTarget.AllBuffered);
+            //base.photonView.RPC("RPC_FoodEaten", RpcTarget.AllBuffered);
+            RPC_FoodEaten();
         }
         if ((other.tag.Equals("Obstacle") || other.tag.Equals("Snake") || other.tag.Equals("Player")) && !_grow.Parts.Contains(other.gameObject))
         {
             OnDeath?.Invoke();
         }
-    }*/
+    }
 
     [PunRPC]
     private void RPC_FoodEaten()
     {
-        //OnFoodEatenGlobal?.Invoke(_lastFoodEaten);
+        OnFoodEatenGlobal?.Invoke(_lastFoodEaten);
     }
 }

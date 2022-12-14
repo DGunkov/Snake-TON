@@ -52,13 +52,16 @@ public class Grow : MonoBehaviour
 
     private void Awake()
     {
-        Parts.Add(this.gameObject);
-        _tail = PhotonNetwork.Instantiate(_tail.name, this.transform.position, this.transform.rotation);
-        _tail.GetComponent<Tail>().Parent = Parts[Parts.Count - 1];
-        Parts.Add(_tail);
-        _mass = GetComponent<Mass>();
-        _foodManager = FindObjectOfType<FoodManager>();
-        _movement = GetComponent<Movement>();
+        if(GetComponent<PhotonView>().IsMine)
+        {
+            Parts.Add(this.gameObject);
+            _tail = PhotonNetwork.Instantiate(_tail.name, this.transform.position, this.transform.rotation);
+            _tail.GetComponent<Tail>().Parent = Parts[Parts.Count - 1];
+            Parts.Add(_tail);
+            _mass = GetComponent<Mass>();
+            _foodManager = FindObjectOfType<FoodManager>();
+            _movement = GetComponent<Movement>();
+        }
     }
 
     private void GrowUp()

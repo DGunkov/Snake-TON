@@ -15,7 +15,7 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
     [SerializeField] private float _maximumX;
     [SerializeField] private float _minimalY;
     [SerializeField] private float _maximumY;
-    [SerializeField] private int NPCCount = 2;
+    private int NPCCount = 0;
 
     private GameObject _uiCamera;
 
@@ -26,7 +26,7 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
         GameObject player = PhotonNetwork.Instantiate(_skins[DataHolder.SkinIndex].name, randomPosition, Quaternion.identity);
         GameObject camera = PhotonNetwork.Instantiate(_cameraPrefab.name, player.transform.position, Quaternion.identity);
 
-        //SpawnNPC();
+        SpawnNPC();
 
         player.GetComponent<PlayerInput>().Camera = camera;
         _uiCamera = player.GetComponentInChildren<Camera>().gameObject;
@@ -42,13 +42,12 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
         for (int i = 0; i < NPCCount; i++)
         {
             Vector2 randomPos = new Vector2(Random.Range(_minimalX, _maximumX), Random.Range(_minimalY, _maximumY));
-            GameObject NPC = PhotonNetwork.InstantiateRoomObject(_npcPrefab.name, randomPos, Quaternion.identity, 1);
-            Debug.Log(NPC);
+            GameObject NPC = PhotonNetwork.InstantiateRoomObject(_npcPrefab.name, randomPos, Quaternion.identity, 1);/*
             for (int j = 0; j < DataHolder.CrystallsEntered / 2 / NPCCount; j++)
             {
                 if(NPC != null)
                 NPC.GetComponent<Mass>().AddMass(1);
-            }
+            }*/
         }
     }
 }

@@ -15,6 +15,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
     [SerializeField] private float _cameraMultyplier = 0.01f;
 
+    private Grow _grow;
     private Mass _mass;
     private PhotonView _view;
     private Movement _movement;
@@ -47,10 +48,11 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     private void Awake()
     {
         _view = GetComponent<PhotonView>();
+        _mass = GetComponent<Mass>();
+        _grow = GetComponent<Grow>();
+        _movement = GetComponent<Movement>();
         if (_view.IsMine)
         {
-            _movement = GetComponent<Movement>();
-            _mass = GetComponent<Mass>();
             _foodManager = FindObjectOfType<FoodManager>();
             _joystick = FindObjectOfType<Joystick>();
             if (DataHolder.MouseInput)
@@ -67,6 +69,9 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         }
         else
         {
+            _mass.enabled = false;
+            _movement.enabled = false;
+            _grow.enabled = false;
             this.enabled = false;
         }
     }

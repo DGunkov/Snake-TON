@@ -9,7 +9,16 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 {
     [SerializeField] private InputField _nickName;
     [SerializeField] private Text _connectButtonText;
-
+    bool fullscreen;
+    void Start()
+    {
+        Resolution[] resolutions = Screen.resolutions;
+        fullscreen = !fullscreen;
+        if (fullscreen)
+            Screen.SetResolution(resolutions[resolutions.Length - 1].width, resolutions[resolutions.Length - 1].height, fullscreen);
+        else
+            Screen.SetResolution(800, 600, fullscreen);
+    }
     public void ConnectUserToServer()
     {
         if (_nickName.text.Length > 0)

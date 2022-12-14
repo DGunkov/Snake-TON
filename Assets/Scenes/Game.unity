@@ -236,7 +236,6 @@ MonoBehaviour:
   _maximumX: 100
   _minimalY: -100
   _maximumY: 100
-  NPCCount: 2
 --- !u!4 &1389776153
 Transform:
   m_ObjectHideFlags: 0

@@ -1,19 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 [RequireComponent(typeof(Movement))]
 public class NPC : MonoBehaviour
 {
     [SerializeField] private List<GameObject> _allFood = new List<GameObject>();
 
+    private Grow _grow;
+    private Mass _mass;
+    private PhotonView _view;
     private Movement _movement;
     private Vector2 _direction;
     private GameObject _food;
 
     private void Awake()
     {
+        _view = GetComponent<PhotonView>();
+        _mass = GetComponent<Mass>();
+        _grow = GetComponent<Grow>();
         _movement = GetComponent<Movement>();
+
+        if (!_view.IsMine)
+        {
+            _mass.enabled = false;
+            _movement.enabled = false;
+            _grow.enabled = false;
+            this.enabled = false;
+        }
     }
 
     private void Update()

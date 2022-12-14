@@ -16,9 +16,12 @@ public class UiManager : MonoBehaviourPunCallbacks
     [SerializeField] Transform _content;
 
     private GameObject _player;
-
     private void Awake()
     {
+        if (!transform.parent.gameObject.GetComponent<PhotonView>().IsMine)
+        {
+            gameObject.SetActive(false);
+        }
         _player = GetComponentInParent<PlayerInput>().gameObject;
         _stamina.maxValue = _player.GetComponent<Movement>().MaxEnergy;
         _stamina.value = _stamina.maxValue;
