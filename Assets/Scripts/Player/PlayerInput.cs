@@ -23,8 +23,12 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     private FoodManager _foodManager;
     private bool _keyboardInput = false;
 
+    private AudioSource _audio_source;
+    [SerializeField] AudioClip[] _sounds;
+
     public override void OnEnable()
     {
+        _view = GetComponent<PhotonView>();
         base.OnEnable();
         if(_mass == null)
         {
@@ -38,6 +42,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
     public override void OnDisable()
     {
+        _view = GetComponent<PhotonView>();
         base.OnDisable();
         if (_view.IsMine)
         {
@@ -78,12 +83,18 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        if(_foodManager == null)
+        _audio_source = Camera.GetComponentInChildren<AudioSource>();
+        if (_foodManager == null)
         {
             _foodManager = FindObjectOfType<FoodManager>();
         }
         _foodManager.UpdateSnakes();
         base.photonView.RPC("RPC_SpawnFood", RpcTarget.AllBuffered, CrystallsEntered);
+    }
+    internal void PlaySound(int n)
+    {
+        _audio_source.clip = _sounds[n];
+        _audio_source.Play();
     }
 
     [PunRPC]
@@ -97,7 +108,6 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         if (_view.IsMine)
         {
             RotationInput();
-            _movement.Move();
         }
     }
 
@@ -106,14 +116,14 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 #if UNITY_STANDALONE || UNITY_WEBGL
         if (_keyboardInput)
         {
-            float direction = -Input.GetAxisRaw("Horizontal");
-            _movement.Rotate(direction);
+           /* float direction = -Input.GetAxisRaw("Horizontal");
+            _movement.direction = direction;*/
         }
         else
         {
             Vector3 mousePosition = Camera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
             Vector2 direction = mousePosition - transform.position;
-            _movement.Rotate(direction);
+            _movement.direction = direction;
         }
         if (_joystick != null)
         {

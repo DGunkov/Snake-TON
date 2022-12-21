@@ -16,6 +16,8 @@ public class UiManager : MonoBehaviourPunCallbacks
     [SerializeField] Transform _content;
 
     private GameObject _player;
+
+    private bool pause_game;
     private void Awake()
     {
         if (!transform.parent.gameObject.GetComponent<PhotonView>().IsMine)
@@ -26,16 +28,44 @@ public class UiManager : MonoBehaviourPunCallbacks
         _stamina.maxValue = _player.GetComponent<Movement>().MaxEnergy;
         _stamina.value = _stamina.maxValue;
         GetComponent<Canvas>().worldCamera = GetComponentInParent<PlayerInput>().gameObject.GetComponentInChildren<Camera>();
+
         foreach (Player player in PhotonNetwork.PlayerList)
         {
             AddPlayer(player);
         }
     }
-
     private void Update()
     {
         _stamina.value = _player.GetComponent<Movement>().Energy;
         _speedValue.text = Mathf.RoundToInt((_player.GetComponent<Movement>().Speed * 10)).ToString();
+    }
+
+    public void AutoPilot()
+    {
+        GameObject parent = transform.parent.gameObject;
+        if(parent.GetComponent<PlayerInput>().enabled == true)
+        {
+            parent.GetComponent<PlayerInput>().enabled = false;
+            parent.GetComponent<NPC>().enabled = true;
+        }
+        else
+        {
+            parent.GetComponent<PlayerInput>().enabled = true;
+            parent.GetComponent<NPC>().enabled = false;
+        }
+    }
+    public void Pause()
+    {
+        if(pause_game)
+        {
+            Time.timeScale = 1;
+            pause_game = false;
+        }
+        else
+        {
+            Time.timeScale = 0;
+            pause_game = true;
+        }
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)

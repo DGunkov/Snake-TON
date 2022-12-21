@@ -15,7 +15,7 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
     [SerializeField] private float _maximumX;
     [SerializeField] private float _minimalY;
     [SerializeField] private float _maximumY;
-    private int NPCCount = 0;
+    private int NPCCount = 20;
 
     private GameObject _uiCamera;
 

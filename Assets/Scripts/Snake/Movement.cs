@@ -11,58 +11,72 @@ public class Movement : MonoBehaviourPunCallbacks
     public event Action<float> OnFoodEatenLocal;
     public static event Action<GameObject> OnFoodEatenGlobal;
     public Action OnDeath;
-    public float Speed = 3f;
-    public float BaseSpeed;
-    public float RotationSpeed = 90f;
+    public float Speed;
+    internal float BaseSpeed;
+    public float RotationSpeed;
     public float MaxEnergy;
     public float Energy;
+    internal Vector2 direction;
+    private Vector3 lastPos;
 
-    [SerializeField] private float _sprintMultyplier;
+    internal bool danger;
+
+
+    [SerializeField] internal float _sprintMultyplier;
     [SerializeField] private float _energyChange;
     [SerializeField] private float _baseAnimationDelay = 30f;
 
     private bool _isAnimating = false;
     private GameObject _lastFoodEaten;
 
+    private UiManager UiManager;
     private Mass _mass;
     private Grow _grow;
+    private PlayerInput PlayerInput;
 
     private void Awake()
     {
+        BaseSpeed = Speed;
         if (GetComponent<PhotonView>().IsMine && this.gameObject.tag.Equals("Player"))
         {
-            BaseSpeed = Speed;
             _mass = GetComponent<Mass>();
             _grow = GetComponent<Grow>();
-            Energy = MaxEnergy;
-        }
-        if (GetComponent<NPC>() != null)
-        {
-            BaseSpeed = Speed;
-            _mass = GetComponent<Mass>();
-            _grow = GetComponent<Grow>();
+            PlayerInput = GetComponent<PlayerInput>();
             Energy = MaxEnergy;
         }
     }
 
     private void Update()
     {
-        if (CanSprint())
+        transform.Translate(Vector3.left * Speed * Time.deltaTime, Space.Self);
+        //Debug.Log(Vector3.Distance(lastPos, transform.position));
+        lastPos = transform.position;
+
+        if(danger)
+        {
+            Vector3 new_direction = -transform.right - transform.position;
+            float angle = Vector2.SignedAngle(Vector2.left, new_direction);
+            Vector3 targetRotation = new Vector3(0, 0, angle);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(targetRotation), RotationSpeed * Time.deltaTime);
+        }
+        else
+        {
+            float angle = Vector2.SignedAngle(Vector2.left, direction);
+            Vector3 targetRotation = new Vector3(0, 0, angle);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(targetRotation), RotationSpeed * Time.deltaTime);
+        }
+
+        if (this.gameObject.tag.Equals("Player") && Input.GetMouseButton(0) && (_mass._weight > 0 || Energy > 0) && GetComponent<PhotonView>().IsMine)
         {
             Sprint();
         }
         else Unsprint();
     }
 
-    private bool CanSprint()
-    {
-        return (Input.GetKey(KeyCode.LeftShift) || Input.GetMouseButton(0)) && (_mass.Weight > 0 || Energy > 0) && GetComponent<PhotonView>().IsMine && GetComponent<NPC>() == null;
-    }
-
     private void Sprint()
     {
+        _grow._sprint = true;
         Speed = BaseSpeed * _sprintMultyplier;
-        _grow.Parts[1].GetComponent<BodyPart>().PartGap = _grow.Parts[1].GetComponent<BodyPart>().BasePartGap / _sprintMultyplier;
         WasteEnergy();
         if (GetComponent<Animator>() != null)
         {
@@ -113,6 +127,10 @@ public class Movement : MonoBehaviourPunCallbacks
 
     private void Unsprint()
     {
+        if(_grow != null)
+        {
+            _grow._sprint = false;
+        }
         if (SprintKeyUp() || Speed != BaseSpeed)
         {
             Speed = BaseSpeed;
@@ -120,7 +138,7 @@ public class Movement : MonoBehaviourPunCallbacks
             {
                 _grow = GetComponent<Grow>();
             }
-            _grow.Parts[1].GetComponent<BodyPart>().PartGap = _grow.Parts[1].GetComponent<BodyPart>().BasePartGap;
+            //_grow.Parts[1].GetComponent<BodyPart>().PartGap = _grow.Parts[1].GetComponent<BodyPart>().BasePartGap;
         }
         if (!(Input.GetKey(KeyCode.LeftShift) || Input.GetMouseButton(0)))
         {
@@ -142,7 +160,6 @@ public class Movement : MonoBehaviourPunCallbacks
 
     private void RecoverEnegry()
     {
-
         if (Energy < MaxEnergy && !(Input.GetKey(KeyCode.LeftShift) || Input.GetMouseButton(0)))
         {
             Energy += _energyChange / 2 * Time.deltaTime;
@@ -165,33 +182,21 @@ public class Movement : MonoBehaviourPunCallbacks
         }
     }
 
-    public void Rotate(float direction)
-    {
-        transform.rotation *= Quaternion.Euler(transform.rotation.x, transform.rotation.y, direction * RotationSpeed * Time.deltaTime);
-    }
-
-    public void Rotate(Vector2 direction)
-    {
-        float angle = Vector2.SignedAngle(Vector2.left, direction);
-        Vector3 targetRotation = new Vector3(0, 0, angle);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(targetRotation), RotationSpeed * Time.deltaTime);
-    }
-
-    public void Move()
-    {
-        transform.Translate(Vector3.left * Speed * Time.deltaTime, Space.Self);
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
+    internal void Trigger(Collider2D other)
     {
         if (other.tag.Equals("Food"))
         {
+            if(PlayerInput != null)
+            {
+                PlayerInput.PlaySound(0);
+            }
             OnFoodEatenLocal?.Invoke(other.gameObject.GetComponent<Food>().Satiety);
             _lastFoodEaten = other.gameObject;
-            //base.photonView.RPC("RPC_FoodEaten", RpcTarget.AllBuffered);
+            base.photonView.RPC("RPC_FoodEaten", RpcTarget.AllBuffered);
             RPC_FoodEaten();
+
         }
-        if ((other.tag.Equals("Obstacle") || other.tag.Equals("Snake") || other.tag.Equals("Player")) && !_grow.Parts.Contains(other.gameObject))
+        if ((other.tag.Equals("Obstacle") || other.tag.Equals("Snake") || other.tag.Equals("Player")) && (_grow != null && !_grow.Parts.Contains(other.gameObject)))
         {
             OnDeath?.Invoke();
         }

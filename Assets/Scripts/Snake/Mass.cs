@@ -10,7 +10,7 @@ public class Mass : MonoBehaviour
     public Action OnMassDeFilled;
 
     private Movement _movement;
-    public float Weight;
+    internal float _weight;
     public float BeginningMass;
 
     private void OnEnable()
@@ -33,44 +33,44 @@ public class Mass : MonoBehaviour
         for (int i = 0; i < BeginningMass; i++)
         {
             AddMass(1);
-            Weight = 0;
+            _weight = 0;
         }
     }
 
     public void AddMass(float value)
     {
-        if (Weight < 0)
+        if (_weight < 0)
         {
-            Weight = 0;
+            _weight = 0;
         }
-        float remain = Weight % 2;
-        Weight += value;
+        float remain = _weight % 2;
+        _weight += value;
         CheckForFill(remain, OnMassFilled);
     }
 
     public void SubstractMass(float value)
     {
-        if (Weight > 0)
+        if (_weight > 0)
         {
-            float remain = Weight % 2;
-            Weight -= value;
+            float remain = _weight % 2;
+            _weight -= value;
             CheckForFill(remain, OnMassDeFilled);
         }
-        if (Weight < 0)
+        if (_weight < 0)
         {
-            Weight = 0;
+            _weight = 0;
             return;
         }
     }
 
     private void CheckForFill(float remain, Action action)
     {
-        if (remain < 1 && Weight % 2 >= 1)
+        if (remain < 1 && _weight % 2 >= 1)
         {
             action?.Invoke();
         }
 
-        if (remain > 1 && (Weight % 2 < 1 || Weight % 2 == 0))
+        if (remain > 1 && (_weight % 2 < 1 || _weight % 2 == 0))
         {
             action?.Invoke();
         }

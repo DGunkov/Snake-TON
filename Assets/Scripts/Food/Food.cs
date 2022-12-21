@@ -5,14 +5,16 @@ using Photon.Pun;
 
 public class Food : MonoBehaviour
 {
-    public float Satiety;
+    [SerializeField] internal float Satiety;
     [SerializeField] private Animator _animator;
     [SerializeField] private Sprite _sprite;
     [SerializeField] private Color _color;
     private GameObject _player;
+    private SpriteRenderer _sprite_renderer;
 
     private void Awake()
     {
+        _sprite_renderer = GetComponent<SpriteRenderer>();
         GetComponentInChildren<SpriteRenderer>().sprite = _sprite;
         GetComponentInChildren<SpriteRenderer>().color = _color;
         _animator = GetComponent<Animator>();
@@ -31,11 +33,11 @@ public class Food : MonoBehaviour
     {
         if (Vector2.Distance(_player.transform.position, this.transform.position) < DataHolder.RenderDistance)
         {
-            this.gameObject.GetComponentInChildren<SpriteRenderer>().enabled = true;
+            _sprite_renderer.enabled = true;
         }
         else
         {
-            this.gameObject.GetComponentInChildren<SpriteRenderer>().enabled = false;
+            _sprite_renderer.enabled = false;
         }
     }
 }

@@ -13,8 +13,8 @@ public class Grow : MonoBehaviour
     private Movement _movement;
     private Mass _mass;
     private FoodManager _foodManager;
-
-    [SerializeField] private GameObject _tail;
+    private float _gap = 2;
+    internal bool _sprint;
 
     private float _instantiateOffset = 0.97f;
 
@@ -23,7 +23,7 @@ public class Grow : MonoBehaviour
     [SerializeField] private float _gapIncrease = 0.7f;
     [SerializeField] private float _minimalSpeed = 1.2f;
     [SerializeField] private float _speedMultyplier = 0.98f;
-    [SerializeField] private float _sizeMultyplier = 1.005f;
+    [SerializeField] private float _sizeMultyplier = 2f;
     [SerializeField] private float _minimalRotationSpeed = 150f;
     [SerializeField] private float _rotationSpeedMultyplier = 0.99f;
 
@@ -55,51 +55,51 @@ public class Grow : MonoBehaviour
         if(GetComponent<PhotonView>().IsMine)
         {
             Parts.Add(this.gameObject);
-            _tail = PhotonNetwork.Instantiate(_tail.name, this.transform.position, this.transform.rotation);
-            _tail.GetComponent<Tail>().Parent = Parts[Parts.Count - 1];
-            Parts.Add(_tail);
             _mass = GetComponent<Mass>();
             _foodManager = FindObjectOfType<FoodManager>();
             _movement = GetComponent<Movement>();
         }
     }
 
+    private void Update()
+    {
+        float distance = ((Vector2)Parts[1].transform.position - (Vector2)Parts[0].transform.position).magnitude;
+
+        for (int n = 1; n < Parts.Count; n++)
+        {
+            if(_sprint)
+            {
+                Parts[n].transform.position = Vector2.Lerp(Parts[n].transform.position, Parts[n - 1].transform.position, distance / (_gap / (_movement._sprintMultyplier * 0.8f)));
+            }
+            else
+            {
+                Parts[n].transform.position = Vector2.Lerp(Parts[n].transform.position, Parts[n - 1].transform.position, distance / _gap);
+            }
+        }
+    }
+
     private void GrowUp()
     {
-        GameObject parent = Parts[Parts.Count - 2];
+        GameObject parent = Parts[Parts.Count - 1];
         Vector3 parentPosition = parent.transform.position;
         parentPosition.x -= _partOffset;
         GameObject bodyPart = PhotonNetwork.Instantiate(_bodyPart.name, parentPosition + (parentPosition - Vector3.one * _instantiateOffset).normalized, parent.transform.rotation) as GameObject;
         _bodyParts.Add(bodyPart);
         bodyPart.GetComponentInChildren<SpriteRenderer>().sortingOrder = -(_bodyParts.IndexOf(bodyPart));
-        _tail.GetComponent<Tail>().Parent = bodyPart;
-        _tail.GetComponentInChildren<SpriteRenderer>().sortingOrder = bodyPart.GetComponentInChildren<SpriteRenderer>().sortingOrder - 1;
-        _tail.transform.position += (parentPosition - Vector3.one * 0.97f).normalized;
 
         BodyPart partScript = bodyPart.GetComponent<BodyPart>();
-        Movement movement = GetComponent<Movement>();
 
-        partScript.ParentMovement = movement;
+        partScript.ParentMovement = _movement;
         partScript.Parent = parent;
-        Parts.Remove(_tail);
         Parts.Add(bodyPart);
-        Parts.Add(_tail);
 
-        AdjustSpeed(movement);
-        AdjustRotationSpeed(movement);
+        AdjustRotationSpeed();
         StartCoroutine(AdjustSize());
-
-        if (_bodyParts.Count % 10 == 0 && _bodyParts.Count > 1)
-        {
-            AdjustGap();
-        }
-
+        AdjustGap();
     }
 
     private void AdjustGap()
     {
-        _bodyParts[0].GetComponent<BodyPart>().BasePartGap += _gapIncrease;
-        _bodyParts[0].GetComponent<BodyPart>().Gap += 0.02f;
         _instantiateOffset += 0.06f;
     }
 
@@ -107,33 +107,22 @@ public class Grow : MonoBehaviour
     {
         for (int i = 0; i < 5; i++)
         {
-            transform.localScale *= 1 + ((_sizeMultyplier - 1) / 5);
+            transform.localScale *= 1 + ((_sizeMultyplier - 1) / 2);
+            _gap *= _sizeMultyplier;
+            _movement.RotationSpeed /= 1 + ((_sizeMultyplier - 1) / 2);
             yield return new WaitForSeconds(0.35f);
-            _tail.GetComponent<Tail>().SetScale();
         }
     }
 
-    private void AdjustRotationSpeed(Movement movement)
+    private void AdjustRotationSpeed()
     {
-        if (movement.RotationSpeed > _minimalRotationSpeed)
+        if (_movement.RotationSpeed > _minimalRotationSpeed)
         {
-            movement.RotationSpeed *= _rotationSpeedMultyplier;
+            _movement.RotationSpeed *= _rotationSpeedMultyplier;
         }
-        else if (movement.RotationSpeed < _minimalRotationSpeed)
+        else if (_movement.RotationSpeed < _minimalRotationSpeed)
         {
-            movement.RotationSpeed = _minimalRotationSpeed;
-        }
-    }
-
-    private void AdjustSpeed(Movement movement)
-    {
-        if (movement.BaseSpeed > _minimalSpeed)
-        {
-            movement.BaseSpeed *= _speedMultyplier;
-        }
-        else if (movement.BaseSpeed < _minimalSpeed)
-        {
-            movement.BaseSpeed = _minimalSpeed;
+            _movement.RotationSpeed = _minimalRotationSpeed;
         }
     }
 
@@ -146,10 +135,10 @@ public class Grow : MonoBehaviour
         }
     }
 
-    private void Death()
+    public void Death()
     {
         int partCount = Parts.Count;
-        for (int i = Parts.Count - 1; i >= partCount - _mass.BeginningMass - 2; i--)
+        for (int i = Parts.Count - 1; i >= partCount - _mass.BeginningMass - 1; i--)
         {
             RemoveAndDestroyPart(Parts[i]);
         }

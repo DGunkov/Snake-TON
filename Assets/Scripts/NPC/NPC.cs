@@ -33,15 +33,25 @@ public class NPC : MonoBehaviour
 
     private void Update()
     {
-        _movement.Move();
         if (_food != null)
         {
             _direction = _food.transform.position - transform.position;
-            _movement.Rotate(_direction);
+            _movement.direction = _direction;
         }
-        else if (_food == null)
+        else 
         {
-            _food = DataHolder.GetRandomFood();
+            if (DataHolder.AllFood.Count > 0)
+            {
+                float distance_to_food = 100000;
+                foreach (GameObject obj in DataHolder.AllFood)
+                {
+                    if (distance_to_food > Vector3.Distance(transform.position, obj.transform.position))
+                    {
+                        distance_to_food = Vector3.Distance(transform.position, obj.transform.position);
+                        _food = obj;
+                    }
+                }
+            }
         }
     }
 
