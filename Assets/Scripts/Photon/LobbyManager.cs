@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
@@ -15,10 +16,16 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     [SerializeField] private RoomItem _roomItem;
     [SerializeField] private Transform _contentObject;
     [SerializeField] private float _timeBetweenUpdates = 1.5f;
+    [SerializeField] TMP_Text _text_balance;
     public bool Creating = false;
 
     private float _nextUpdateTime;
     private List<RoomItem> _roomItems = new List<RoomItem>();
+
+    private void Start()
+    {
+        _text_balance.text = "Balance: " + DataHolder.balance;
+    }
 
     public void SwitchToRoom()
     {

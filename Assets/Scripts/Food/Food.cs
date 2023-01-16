@@ -31,13 +31,16 @@ public class Food : MonoBehaviour
 
     private void Update()
     {
-        if (Vector2.Distance(_player.transform.position, this.transform.position) < DataHolder.RenderDistance)
+        if(_player != null)
         {
-            _sprite_renderer.enabled = true;
-        }
-        else
-        {
-            _sprite_renderer.enabled = false;
-        }
+            if (Vector2.Distance(_player.transform.position, this.transform.position) < DataHolder.RenderDistance)
+            {
+                _sprite_renderer.enabled = true;
+            }
+            else
+            {
+                _sprite_renderer.enabled = false;
+            }
+        }        
     }
 }

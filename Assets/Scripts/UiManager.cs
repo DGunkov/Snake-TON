@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 using System;
+using TMPro;
 
 public class UiManager : MonoBehaviourPunCallbacks
 {
@@ -14,12 +15,20 @@ public class UiManager : MonoBehaviourPunCallbacks
     [SerializeField] private List<GameObject> _playerItems = new List<GameObject>();
     [SerializeField] GameObject _playerItem;
     [SerializeField] Transform _content;
+    [SerializeField] GameObject _emojy;
+    [SerializeField] GameObject _death_panel;
+    [SerializeField] GameObject _stats_panel;
+    [SerializeField] TMP_Text _kills;
+    [SerializeField] TMP_Text _collect;
+
 
     private GameObject _player;
 
     private bool pause_game;
     private void Awake()
     {
+        _stats_panel.SetActive(false);
+        _death_panel.SetActive(false);
         if (!transform.parent.gameObject.GetComponent<PhotonView>().IsMine)
         {
             gameObject.SetActive(false);
@@ -40,17 +49,23 @@ public class UiManager : MonoBehaviourPunCallbacks
         _speedValue.text = Mathf.RoundToInt((_player.GetComponent<Movement>().Speed * 10)).ToString();
     }
 
+
+    public void SelectEmojy(int i)
+    {
+        _emojy.GetComponent<Emojy>()._time_to_off = 1;
+        _emojy.SetActive(true);
+    }
     public void AutoPilot()
     {
         GameObject parent = transform.parent.gameObject;
-        if(parent.GetComponent<PlayerInput>().enabled == true)
+        if(parent.GetComponent<NPC>().enabled == false)
         {
-            parent.GetComponent<PlayerInput>().enabled = false;
+            parent.GetComponent<PlayerInput>().auto_pilot = true;
             parent.GetComponent<NPC>().enabled = true;
         }
         else
         {
-            parent.GetComponent<PlayerInput>().enabled = true;
+            parent.GetComponent<PlayerInput>().auto_pilot = false;
             parent.GetComponent<NPC>().enabled = false;
         }
     }
@@ -90,5 +105,20 @@ public class UiManager : MonoBehaviourPunCallbacks
                 Destroy(playerItem);
             }
         }
+    }
+
+    internal void SwitchDeatchPanel(bool stay)
+    {
+        _death_panel.SetActive(stay);
+    }
+
+    public void Stats()
+    {
+        _death_panel.SetActive(false);
+        _stats_panel.SetActive(true);
+        int k = transform.parent.GetComponent<PlayerInput>()._kills;
+        int c = transform.parent.GetComponent<PlayerInput>()._collect_crystalls;
+        _collect.text = "Kills: " + k.ToString();
+        _kills.text = "Crystalls: " + c.ToString();
     }
 }

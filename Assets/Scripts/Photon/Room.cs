@@ -32,17 +32,21 @@ public class Room : MonoBehaviourPunCallbacks
 
     public void StartGame()
     {
-        DataHolder.SkinIndex = _skinIndex;
-        DataHolder.MouseInput = _mouseInput.isOn;
-        DataHolder.CrystallsEntered = int.Parse(_crystallsInput.text);
-        if (_lobbyManager.Creating)
+        if(DataHolder.balance >= int.Parse(_crystallsInput.text))
         {
-            PhotonNetwork.CreateRoom(DataHolder.RoomName);
-        }
-        else
-        {
-            PhotonNetwork.JoinRoom(DataHolder.RoomName);
-        }
+            DataHolder.balance -= int.Parse(_crystallsInput.text);
+            DataHolder.SkinIndex = _skinIndex;
+            DataHolder.MouseInput = _mouseInput.isOn;
+            DataHolder.CrystallsEntered = int.Parse(_crystallsInput.text);
+            if (_lobbyManager.Creating)
+            {
+                PhotonNetwork.CreateRoom(DataHolder.RoomName);
+            }
+            else
+            {
+                PhotonNetwork.JoinRoom(DataHolder.RoomName);
+            }
+        }        
     }
 
     public override void OnJoinedRoom()

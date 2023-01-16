@@ -15,6 +15,11 @@ public class Grow : MonoBehaviour
     private FoodManager _foodManager;
     private float _gap = 2;
     internal bool _sprint;
+    private bool _next_spawn;
+    private Vector3 _start_scale;
+    private int _count_spawn_parts;
+    private float _time_to_new_spawn = 1;
+    private bool _exit_button = false;
 
     private float _instantiateOffset = 0.97f;
 
@@ -52,7 +57,7 @@ public class Grow : MonoBehaviour
 
     private void Awake()
     {
-        if(GetComponent<PhotonView>().IsMine)
+        if (GetComponent<PhotonView>().IsMine)
         {
             Parts.Add(this.gameObject);
             _mass = GetComponent<Mass>();
@@ -60,26 +65,54 @@ public class Grow : MonoBehaviour
             _movement = GetComponent<Movement>();
         }
     }
+    private void Start()
+    {
+        _start_scale = transform.localScale;
+    }
 
     private void Update()
     {
-        float distance = ((Vector2)Parts[1].transform.position - (Vector2)Parts[0].transform.position).magnitude;
+        float distance = 0;
+        if (Parts.Count > 1)
+        {
+            distance = ((Vector2)Parts[1].transform.position - (Vector2)Parts[0].transform.position).magnitude;
+        }
 
         for (int n = 1; n < Parts.Count; n++)
         {
             if(_sprint)
             {
-                Parts[n].transform.position = Vector2.Lerp(Parts[n].transform.position, Parts[n - 1].transform.position, distance / (_gap / (_movement._sprintMultyplier * 0.8f)));
+                Parts[n].transform.position = Vector2.Lerp(Parts[n].transform.position, Parts[n - 1].transform.position, distance / (_gap / (_movement._sprintMultyplier * 0.62f)));
             }
             else
             {
                 Parts[n].transform.position = Vector2.Lerp(Parts[n].transform.position, Parts[n - 1].transform.position, distance / _gap);
             }
         }
+        if (_time_to_new_spawn > 0)
+        {
+            _time_to_new_spawn -= Time.deltaTime;
+        }
+        else
+        {
+            if (_count_spawn_parts > 0)
+            {
+                StartCoroutine(GrowUpCor());
+                _count_spawn_parts--;
+                _time_to_new_spawn = 1;
+            }            
+        }
+        
     }
 
     private void GrowUp()
     {
+        _count_spawn_parts++;
+    }
+
+    private IEnumerator GrowUpCor()
+    {
+        yield return null;
         GameObject parent = Parts[Parts.Count - 1];
         Vector3 parentPosition = parent.transform.position;
         parentPosition.x -= _partOffset;
@@ -93,9 +126,12 @@ public class Grow : MonoBehaviour
         partScript.Parent = parent;
         Parts.Add(bodyPart);
 
-        AdjustRotationSpeed();
-        StartCoroutine(AdjustSize());
-        AdjustGap();
+        if(_start_scale.x * 3 > transform.localScale.x)
+        {
+            StartCoroutine(AdjustSize());
+            AdjustGap();
+            AdjustRotationSpeed();
+        }
     }
 
     private void AdjustGap()
@@ -137,8 +173,21 @@ public class Grow : MonoBehaviour
 
     public void Death()
     {
+        if (GetComponent<PlayerInput>() != null)
+        {
+            DisableSnake();
+            GetComponent<PlayerInput>().UiManager.SwitchDeatchPanel(true);
+        }
+        else
+        {
+            StartDestroyParts();
+        }
+    }
+
+    public void StartDestroyParts()
+    {
         int partCount = Parts.Count;
-        for (int i = Parts.Count - 1; i >= partCount - _mass.BeginningMass - 1; i--)
+        for (int i = Parts.Count - 1; i >= partCount - _mass.BeginningMass - 1 && i > 0; i--)
         {
             RemoveAndDestroyPart(Parts[i]);
         }
@@ -152,13 +201,60 @@ public class Grow : MonoBehaviour
                 _foodManager.SpawnFoodItem(_foodManager.FoodOne, new Vector2(part.transform.position.x, part.transform.position.y));
             }
         }
-        if (GetComponent<PlayerInput>() != null)
+    }
+
+    void DisableSnake()
+    {
+        GetComponent<Movement>().enabled = false;
+        for (int i = 0; i < Parts.Count; i++)
         {
-            PhotonNetwork.LeaveRoom();
-            PhotonNetwork.JoinLobby();
-            PhotonNetwork.Destroy(GetComponent<PlayerInput>().Camera.gameObject);
-            SceneManager.LoadScene("Lobby");
+            if (Parts[i] == gameObject)
+            {
+                transform.Find("HeadSprite").gameObject.SetActive(false);
+                transform.Find("Navigation").gameObject.SetActive(false);
+            }
+            else
+            {
+                Parts[i].SetActive(false);
+            }
         }
+    }
+
+    public void PressExit()
+    {
+        DisableSnake();
+        GetComponent<PlayerInput>().UiManager.Stats();
+    }
+
+    public void Exit()
+    {
+        StartDestroyParts();
+        DataHolder.ClearList();
+        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.JoinLobby();
+        PhotonNetwork.Destroy(GetComponent<PlayerInput>().Camera.gameObject);
+        SceneManager.LoadScene("Lobby");
+    }
+
+    public void Reborn()
+    {
+        GetComponent<PlayerInput>().UiManager.SwitchDeatchPanel(false);
+        for (int i = 0; i < Parts.Count; i++)
+        {
+            if (Parts[i] == gameObject)
+            {
+                transform.Find("HeadSprite").gameObject.SetActive(true);
+                transform.Find("Navigation").gameObject.SetActive(true);
+                GetComponent<Movement>().enabled = true;
+            }
+            else
+            {
+                float randAng = UnityEngine.Random.Range(0, Mathf.PI * 2);
+                transform.position = new Vector2(Mathf.Cos(randAng) * 50, Mathf.Sin(randAng) * 50);
+                Parts[i].transform.position = transform.position;
+                Parts[i].SetActive(true);
+            }
+        }            
     }
 
     private void RemoveAndDestroyPart(GameObject part)

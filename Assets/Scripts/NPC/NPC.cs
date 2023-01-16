@@ -45,7 +45,7 @@ public class NPC : MonoBehaviour
                 float distance_to_food = 100000;
                 foreach (GameObject obj in DataHolder.AllFood)
                 {
-                    if (distance_to_food > Vector3.Distance(transform.position, obj.transform.position))
+                    if (distance_to_food > Vector3.Distance(transform.position, obj.transform.position) && Vector3.Distance(transform.position, obj.transform.position) > 5)
                     {
                         distance_to_food = Vector3.Distance(transform.position, obj.transform.position);
                         _food = obj;

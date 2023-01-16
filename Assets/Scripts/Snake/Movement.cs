@@ -18,6 +18,7 @@ public class Movement : MonoBehaviourPunCallbacks
     public float Energy;
     internal Vector2 direction;
     private Vector3 lastPos;
+    private bool start_death;
 
     internal bool danger;
 
@@ -33,6 +34,17 @@ public class Movement : MonoBehaviourPunCallbacks
     private Mass _mass;
     private Grow _grow;
     private PlayerInput PlayerInput;
+
+    private void OnEnable()
+    {
+        if (GetComponent<PhotonView>().IsMine && this.gameObject.tag.Equals("Player"))
+        {
+            _mass = GetComponent<Mass>();
+            _grow = GetComponent<Grow>();
+            PlayerInput = GetComponent<PlayerInput>();
+            Energy = MaxEnergy;
+        }
+    }
 
     private void Awake()
     {
@@ -189,6 +201,7 @@ public class Movement : MonoBehaviourPunCallbacks
             if(PlayerInput != null)
             {
                 PlayerInput.PlaySound(0);
+                PlayerInput._collect_crystalls++;
             }
             OnFoodEatenLocal?.Invoke(other.gameObject.GetComponent<Food>().Satiety);
             _lastFoodEaten = other.gameObject;
@@ -196,9 +209,29 @@ public class Movement : MonoBehaviourPunCallbacks
             RPC_FoodEaten();
 
         }
-        if ((other.tag.Equals("Obstacle") || other.tag.Equals("Snake") || other.tag.Equals("Player")) && (_grow != null && !_grow.Parts.Contains(other.gameObject)))
+        else
         {
-            OnDeath?.Invoke();
+            if(PlayerInput != null)
+            {
+                if (_grow != null && !_grow.Parts.Contains(other.gameObject) && other.tag.Equals("NPC"))
+                {
+                    start_death = true;
+                    OnDeath?.Invoke();
+                }
+            }
+            else
+            {
+                if (_grow != null && !_grow.Parts.Contains(other.gameObject))
+                {
+                    if (!other.tag.Equals("NPC") && !start_death)
+                    {
+                        other.GetComponent<BodyPart>().ParentMovement.gameObject.GetComponent<PlayerInput>()._kills++;
+                    }
+                    start_death = true;
+                    OnDeath?.Invoke();
+                }
+            }
+            
         }
     }
 

@@ -12,8 +12,10 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     public GameObject Camera;
     public event Action<int> OnSnakeAppeared;
     internal bool _mainPlayer;
+    private Vector3 _start_scale;
 
     [SerializeField] private float _cameraMultyplier = 0.01f;
+    public UiManager UiManager;
 
     private Grow _grow;
     private Mass _mass;
@@ -22,6 +24,9 @@ public class PlayerInput : MonoBehaviourPunCallbacks
     private Joystick _joystick;
     private FoodManager _foodManager;
     private bool _keyboardInput = false;
+    internal bool auto_pilot;
+    internal int _collect_crystalls;
+    internal int _kills;
 
     private AudioSource _audio_source;
     [SerializeField] AudioClip[] _sounds;
@@ -80,9 +85,9 @@ public class PlayerInput : MonoBehaviourPunCallbacks
             this.enabled = false;
         }
     }
-
     private void Start()
     {
+        _start_scale = transform.localScale;
         _audio_source = Camera.GetComponentInChildren<AudioSource>();
         if (_foodManager == null)
         {
@@ -105,7 +110,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        if (_view.IsMine)
+        if (_view.IsMine && !auto_pilot)
         {
             RotationInput();
         }
@@ -142,7 +147,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
 
     public void CameraZoom()
     {
-        if (_view.IsMine)
+        if (_view.IsMine && _start_scale.x * 3 > transform.localScale.x)
         {
             StartCoroutine(CameraRemote());
         }
@@ -153,7 +158,7 @@ public class PlayerInput : MonoBehaviourPunCallbacks
         for (int i = 0; i < 5; i++)
         {
             Camera.GetComponent<Camera>().orthographicSize += _cameraMultyplier;
-            DataHolder.RenderDistance += 0.02f;
+            DataHolder.RenderDistance += 0.1f;
             yield return new WaitForSeconds(0.35f);
         }
     }
